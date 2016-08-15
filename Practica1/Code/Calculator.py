@@ -49,11 +49,3 @@ class Calculator:
         if n in symbols:
             return True
         return False
-
-if __name__ == '__main__':
-    argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "l", ["local="])
-    x = args[0]
-    c = Calculator(x)
-    print c.calculator()
-    ##print c.resultado

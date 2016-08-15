@@ -24,12 +24,3 @@ class ScientificCalculator(Calculator):
             return c.calculate(tok)
 
     #def save_user(self, username, password):
-
-
-if __name__ == '__main__':
-    argv = sys.argv[1:]
-    opts, args = getopt.getopt(argv, "l", ["local="])
-    x = args[0]
-    c = ScientificCalculator(x)
-#    print c.scientific_calculate()
-    #print c.resultado

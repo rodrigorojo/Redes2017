@@ -130,14 +130,3 @@ class Calculadora(QtGui.QDialog):
         else:
             tmp = self.textCalc.text()
             self.textCalc.setText(tmp+str1)
-
-
-if __name__ == '__main__':
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    login = Login()
-
-    if login.exec_() == QtGui.QDialog.Accepted:
-        window = Calculadora()
-        window.show()
-        sys.exit(app.exec_())
