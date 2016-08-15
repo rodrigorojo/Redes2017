@@ -4,6 +4,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from GUI.GUI import Login
 from GUI.GUI import Calculadora
+from GUI.GUI import AgregarUsr
 
 if __name__ == '__main__':
 
@@ -14,4 +15,7 @@ if __name__ == '__main__':
     if login.exec_() == QtGui.QDialog.Accepted:
         window = Calculadora()
         window.show()
-        sys.exit(app.exec_())
+        if window.exec_() == QtGui.QDialog.Accepted:
+            a = AgregarUsr()
+            a.show()
+            sys.exit(app.exec_())

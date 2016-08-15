@@ -46,6 +46,7 @@ class Calculadora(QtGui.QDialog):
         super(Calculadora, self).__init__(parent)
 
         self.buttonNU = QtGui.QPushButton('Nuevo Usuario', self)
+        self.buttonNU.clicked.connect(self.agrusr)
         self.textCalc = QLineEdit(self)
         self.button0 = QtGui.QPushButton('0', self)
         self.button0.clicked.connect(lambda: self.change("0"))
@@ -144,7 +145,7 @@ class Calculadora(QtGui.QDialog):
 
 class AgregarUsr(QtGui.QDialog):
     def __init__(self, parent=None):
-        super(Login, self).__init__(parent)
+        super(AgregarUsr, self).__init__(parent)
 
         self.Usuario = QLabel(self)
         self.Usuario.setText("Usuario")
@@ -156,7 +157,6 @@ class AgregarUsr(QtGui.QDialog):
         self.textPas.setEchoMode(QtGui.QLineEdit.Password)
 
         self.buttonLogin = QPushButton('Agregar Usuario', self)
-        self.buttonLogin.clicked.connect(self.handle)
 
         layout = QFormLayout(self)
         layout.addRow(self.Usuario, self.textUsr)
