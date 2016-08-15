@@ -167,6 +167,6 @@ class AgregarUsr(QtGui.QDialog):
         self.setWindowTitle("Nuevo Usuario")
 
     def handleagrusr(self):
-        f = open('../Practica1/Code/Input.txt','w')
+        f = open('../Practica1/Code/Input.txt','a')
         f.write('username : ' + self.textUsr.text() + ' password original : ' + self.textPas.text() + '\n')
         f.close()

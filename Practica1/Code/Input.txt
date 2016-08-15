@@ -1,1 +1,2 @@
-username : lol password original : lol
+username : root password original : root
+username : foo password original : bar
