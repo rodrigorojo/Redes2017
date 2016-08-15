@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Code.ScientificCalculator import ScientificCalculator
+import os
 
 class Login(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -27,7 +28,14 @@ class Login(QtGui.QDialog):
         self.setWindowTitle("Login")
 
     def handleLogin(self):
-        if (self.textUsr.text() == 'foo' and self.textPas.text() == 'bar'):
+        logs = False
+        with open('../Practica1/Code/Input.txt', 'r') as f:
+            data = f.readlines()
+            for line in data:
+                words = line.split()
+                if (self.textUsr.text() == words[2] and self.textPas.text() == words[6]):
+                    logs = True
+        if (logs):
             self.accept()
         else:
             QtGui.QMessageBox.warning(self, 'Error', 'NO tienes acceso al sistema')
