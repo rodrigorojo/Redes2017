@@ -138,3 +138,29 @@ class Calculadora(QtGui.QDialog):
         else:
             tmp = self.textCalc.text()
             self.textCalc.setText(tmp+str1)
+
+    def agrusr(self):
+            self.accept()
+
+class AgregarUsr(QtGui.QDialog):
+    def __init__(self, parent=None):
+        super(Login, self).__init__(parent)
+
+        self.Usuario = QLabel(self)
+        self.Usuario.setText("Usuario")
+        self.textUsr = QLineEdit(self)
+
+        self.Password = QLabel(self)
+        self.Password.setText("Password")
+        self.textPas = QLineEdit(self)
+        self.textPas.setEchoMode(QtGui.QLineEdit.Password)
+
+        self.buttonLogin = QPushButton('Agregar Usuario', self)
+        self.buttonLogin.clicked.connect(self.handle)
+
+        layout = QFormLayout(self)
+        layout.addRow(self.Usuario, self.textUsr)
+        layout.addRow(self.Password, self.textPas)
+        layout.addRow(self.buttonLogin)
+
+        self.setWindowTitle("Nuevo Usuario")
