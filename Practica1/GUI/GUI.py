@@ -157,6 +157,7 @@ class AgregarUsr(QtGui.QDialog):
         self.textPas.setEchoMode(QtGui.QLineEdit.Password)
 
         self.buttonLogin = QPushButton('Agregar Usuario', self)
+        self.buttonLogin.clicked.connect(self.handleagrusr)
 
         layout = QFormLayout(self)
         layout.addRow(self.Usuario, self.textUsr)
@@ -164,3 +165,8 @@ class AgregarUsr(QtGui.QDialog):
         layout.addRow(self.buttonLogin)
 
         self.setWindowTitle("Nuevo Usuario")
+
+    def handleagrusr(self):
+        f = open('../Practica1/Code/Input.txt','w')
+        f.write('username : ' + self.textUsr.text() + ' password original : ' + self.textPas.text() + '\n')
+        f.close()
