@@ -1,4 +1,5 @@
 from Calculator import *
+from Constants.Constants import *
 
 class ScientificCalculator(Calculator):
 
@@ -12,16 +13,16 @@ class ScientificCalculator(Calculator):
     def scientific_calculate(self):
         c = Calculator(self.expresion)
         tok = c.tokenizer(self.expresion)
-        if (tok[1] == "*"):
+        if (tok[1] == Constants().MULT_SYMBOL):
             return float(tok[0])*float(tok[2])
-        elif (tok[1] == "/"):
+        elif (tok[1] == Constants().DIV_SYMBOL):
             try:
                 return float(tok[0])/float(tok[2])
             except ZeroDivisionError:
-                return "Error: No puedes dividir entre cero"
-        elif (tok[1] == "mod"):
+                return Constants().ZERO_DIVISION_ERR
+        elif (tok[1] == Constants().MOD_SYMBOL):
             return float(tok[0])%float(tok[2])
-        elif (tok[1] == "^"):
+        elif (tok[1] == Constants().POW_SYMBOL):
             return float(tok[0])**float(tok[2])
         else:
             return c.calculate(tok)

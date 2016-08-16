@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Code.ScientificCalculator import ScientificCalculator
+from Constants.Constants import *
 import os
 
 class Login(QtGui.QDialog):
@@ -9,15 +10,15 @@ class Login(QtGui.QDialog):
         super(Login, self).__init__(parent)
 
         self.Usuario = QLabel(self)
-        self.Usuario.setText("Usuario")
+        self.Usuario.setText(Constants().USUARIO)
         self.textUsr = QLineEdit(self)
 
         self.Password = QLabel(self)
-        self.Password.setText("Password")
+        self.Password.setText(Constants().PASSWORD)
         self.textPas = QLineEdit(self)
         self.textPas.setEchoMode(QtGui.QLineEdit.Password)
 
-        self.buttonLogin = QPushButton('Ingresar', self)
+        self.buttonLogin = QPushButton(Constants().INGRESAR, self)
         self.buttonLogin.clicked.connect(self.handleLogin)
 
         layout = QFormLayout(self)
@@ -25,11 +26,11 @@ class Login(QtGui.QDialog):
         layout.addRow(self.Password, self.textPas)
         layout.addRow(self.buttonLogin)
 
-        self.setWindowTitle("Login")
+        self.setWindowTitle(Constants().LOGIN)
 
     def handleLogin(self):
         logs = False
-        with open('../Practica1/Code/Input.txt', 'r') as f:
+        with open(Constants().PATH_DB, Constants().MODE_R) as f:
             data = f.readlines()
             for line in data:
                 words = line.split()
@@ -38,7 +39,7 @@ class Login(QtGui.QDialog):
         if (logs):
             self.accept()
         else:
-            QtGui.QMessageBox.warning(self, 'Error', 'NO tienes acceso al sistema')
+            QtGui.QMessageBox.warning(self, Constants().ERROR, Constants().DENIED_ACCESS)
 
     def str_to_ascii(self, cad):
         resultado = ""
@@ -51,47 +52,47 @@ class Calculadora(QtGui.QDialog):
     def __init__(self, parent=None):
         super(Calculadora, self).__init__(parent)
 
-        self.buttonNU = QtGui.QPushButton('Nuevo Usuario', self)
+        self.buttonNU = QtGui.QPushButton(Constants().NEW_USER, self)
         self.buttonNU.clicked.connect(self.agrusr)
         self.textCalc = QLineEdit(self)
-        self.button0 = QtGui.QPushButton('0', self)
-        self.button0.clicked.connect(lambda: self.change("0"))
-        self.button1 = QtGui.QPushButton('1', self)
-        self.button1.clicked.connect(lambda: self.change("1"))
-        self.button2 = QtGui.QPushButton('2', self)
-        self.button2.clicked.connect(lambda: self.change("2"))
-        self.button3 = QtGui.QPushButton('3', self)
-        self.button3.clicked.connect(lambda: self.change("3"))
-        self.button4 = QtGui.QPushButton('4', self)
-        self.button4.clicked.connect(lambda: self.change("4"))
-        self.button5 = QtGui.QPushButton('5', self)
-        self.button5.clicked.connect(lambda: self.change("5"))
-        self.button6 = QtGui.QPushButton('6', self)
-        self.button6.clicked.connect(lambda: self.change("6"))
-        self.button7 = QtGui.QPushButton('7', self)
-        self.button7.clicked.connect(lambda: self.change("7"))
-        self.button8 = QtGui.QPushButton('8', self)
-        self.button8.clicked.connect(lambda: self.change("8"))
-        self.button9 = QtGui.QPushButton('9', self)
-        self.button9.clicked.connect(lambda: self.change("9"))
-        self.buttons = QtGui.QPushButton('+', self)
-        self.buttons.clicked.connect(lambda: self.change("+"))
-        self.buttonr = QtGui.QPushButton('-', self)
-        self.buttonr.clicked.connect(lambda: self.change("-"))
-        self.buttonm = QtGui.QPushButton('*', self)
-        self.buttonm.clicked.connect(lambda: self.change("*"))
-        self.buttond = QtGui.QPushButton('/', self)
-        self.buttond.clicked.connect(lambda: self.change("/"))
-        self.buttonp = QtGui.QPushButton('.', self)
-        self.buttonp.clicked.connect(lambda: self.change("."))
-        self.buttoni = QtGui.QPushButton('=', self)
+        self.button0 = QtGui.QPushButton(Constants().CERO, self)
+        self.button0.clicked.connect(lambda: self.change(Constants().CERO))
+        self.button1 = QtGui.QPushButton(Constants().ONE, self)
+        self.button1.clicked.connect(lambda: self.change(Constants().ONE))
+        self.button2 = QtGui.QPushButton(Constants().TWO, self)
+        self.button2.clicked.connect(lambda: self.change(Constants().TWO))
+        self.button3 = QtGui.QPushButton(Constants().THREE, self)
+        self.button3.clicked.connect(lambda: self.change(Constants().THREE))
+        self.button4 = QtGui.QPushButton(Constants().FOUR, self)
+        self.button4.clicked.connect(lambda: self.change(Constants().FOUR))
+        self.button5 = QtGui.QPushButton(Constants().FIVE, self)
+        self.button5.clicked.connect(lambda: self.change(Constants().FIVE))
+        self.button6 = QtGui.QPushButton(Constants().SIX, self)
+        self.button6.clicked.connect(lambda: self.change(Constants().SIX))
+        self.button7 = QtGui.QPushButton(Constants().SEVEN, self)
+        self.button7.clicked.connect(lambda: self.change(Constants().SEVEN))
+        self.button8 = QtGui.QPushButton(Constants().EIGHT, self)
+        self.button8.clicked.connect(lambda: self.change(Constants().EIGHT))
+        self.button9 = QtGui.QPushButton(Constants().NINE, self)
+        self.button9.clicked.connect(lambda: self.change(Constants().NINE))
+        self.buttons = QtGui.QPushButton(Constants().ADD_SYMBOL, self)
+        self.buttons.clicked.connect(lambda: self.change(Constants().ADD_SYMBOL))
+        self.buttonr = QtGui.QPushButton(Constants().SUB_SYMBOL, self)
+        self.buttonr.clicked.connect(lambda: self.change(Constants().SUB_SYMBOL))
+        self.buttonm = QtGui.QPushButton(Constants().MULT_SYMBOL, self)
+        self.buttonm.clicked.connect(lambda: self.change(Constants().MULT_SYMBOL))
+        self.buttond = QtGui.QPushButton(Constants().DIV_SYMBOL, self)
+        self.buttond.clicked.connect(lambda: self.change(Constants().DIV_SYMBOL))
+        self.buttonp = QtGui.QPushButton(Constants().DOT, self)
+        self.buttonp.clicked.connect(lambda: self.change(Constants().DOT))
+        self.buttoni = QtGui.QPushButton(Constants().EQUAL, self)
         self.buttoni.clicked.connect(self.calculates)
-        self.buttonmod = QtGui.QPushButton('mod', self)
-        self.buttonmod.clicked.connect(lambda: self.change("mod"))
-        self.buttonpot = QtGui.QPushButton('^', self)
-        self.buttonpot.clicked.connect(lambda: self.change("^"))
-        self.buttonc = QtGui.QPushButton('C', self)
-        self.buttonc.clicked.connect(lambda: self.change(""))
+        self.buttonmod = QtGui.QPushButton(Constants().MOD_SYMBOL, self)
+        self.buttonmod.clicked.connect(lambda: self.change(Constants().MOD_SYMBOL))
+        self.buttonpot = QtGui.QPushButton(Constants().POW_SYMBOL, self)
+        self.buttonpot.clicked.connect(lambda: self.change(Constants().POW_SYMBOL))
+        self.buttonc = QtGui.QPushButton(Constants().CLEAR, self)
+        self.buttonc.clicked.connect(lambda: self.change(Constants().BLANK))
 
         layout = QFormLayout(self)
         layout.addRow(self.buttonNU)
@@ -131,7 +132,7 @@ class Calculadora(QtGui.QDialog):
         r4.addWidget(self.buttons)
         layout.addRow(r4)
 
-        self.setWindowTitle("Calculadora")
+        self.setWindowTitle(Constants().CALCULADORA)
 
     def calculates(self):
         x = self.textCalc.text()
@@ -154,15 +155,15 @@ class AgregarUsr(QtGui.QDialog):
         super(AgregarUsr, self).__init__(parent)
 
         self.Usuario = QLabel(self)
-        self.Usuario.setText("Usuario")
+        self.Usuario.setText(Constants().USUARIO)
         self.textUsr = QLineEdit(self)
 
         self.Password = QLabel(self)
-        self.Password.setText("Password")
+        self.Password.setText(Constants().PASSWORD)
         self.textPas = QLineEdit(self)
         self.textPas.setEchoMode(QtGui.QLineEdit.Password)
 
-        self.buttonLogin = QPushButton('Agregar Usuario', self)
+        self.buttonLogin = QPushButton(Constants().NEW_USER, self)
         self.buttonLogin.clicked.connect(self.handleagrusr)
 
         layout = QFormLayout(self)
@@ -170,10 +171,10 @@ class AgregarUsr(QtGui.QDialog):
         layout.addRow(self.Password, self.textPas)
         layout.addRow(self.buttonLogin)
 
-        self.setWindowTitle("Nuevo Usuario")
+        self.setWindowTitle(Constants().NEW_USER)
 
     def handleagrusr(self):
         l = Login()
-        f = open('../Practica1/Code/Input.txt','a')
-        f.write('username : ' + self.textUsr.text() + ' password original : ' + l.str_to_ascii(self.textPas.text()) + '\n')
+        f = open(Constants().PATH_DB,Constants().MODE_A)
+        f.write(Constants().USERNAME_DB + self.textUsr.text() + Constants().PASSWORD_DB + l.str_to_ascii(self.textPas.text()) + '\n')
         f.close()

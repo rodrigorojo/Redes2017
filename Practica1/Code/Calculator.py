@@ -1,4 +1,5 @@
 import sys,getopt
+from Constants.Constants import *
 
 class Calculator:
     expresion = ""
@@ -11,12 +12,12 @@ class Calculator:
         return self.calculate(tok)
 
     def calculate(self, tok):
-        if(tok[1] == "+"):
+        if(tok[1] == Constants().ADD_SYMBOL):
             return  float(tok[0])+float(tok[2])
-        elif (tok[1] == "-"):
+        elif (tok[1] == Constants().SUB_SYMBOL):
             return float(tok[0])-float(tok[2])
         else :
-            return "Error: Operacion Invalida"
+            return Constants().INVALID_OP_ERR
 
     def tokenizer(self,exp):
         token1 = ""
@@ -41,11 +42,5 @@ class Calculator:
     def is_number(self, n):
         numbers = ["0","1","2","3","4","5","6","7","8","9","."]
         if n in numbers:
-            return True
-        return False
-
-    def is_symbol(self, n):
-        symbols = ["+","-"]
-        if n in symbols:
             return True
         return False
