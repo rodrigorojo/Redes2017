@@ -34,5 +34,5 @@ class Constants(object):
     CALCULADORA = "calculadora"
     NEW_USER = "Agregar Usuario"
     MODE_A = "a"
-    USERNAME_DB = "username: "
+    USERNAME_DB = "username : "
     PASSWORD_DB = " password original : "

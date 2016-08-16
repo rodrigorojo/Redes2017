@@ -176,5 +176,6 @@ class AgregarUsr(QtGui.QDialog):
     def handleagrusr(self):
         l = Login()
         f = open(Constants().PATH_DB,Constants().MODE_A)
-        f.write(Constants().USERNAME_DB + self.textUsr.text() + Constants().PASSWORD_DB + l.str_to_ascii(self.textPas.text()) + '\n')
+        f.write(Constants().USERNAME_DB + self.textUsr.text() + Constants().PASSWORD_DB + l.str_to_ascii(self.textPas.text()))
+        f.write('\n')
         f.close()
