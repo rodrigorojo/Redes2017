@@ -33,12 +33,18 @@ class Login(QtGui.QDialog):
             data = f.readlines()
             for line in data:
                 words = line.split()
-                if (self.textUsr.text() == words[2] and self.textPas.text() == words[6]):
+                if (self.textUsr.text() == words[2] and self.str_to_ascii(self.textPas.text()) == words[6]):
                     logs = True
         if (logs):
             self.accept()
         else:
             QtGui.QMessageBox.warning(self, 'Error', 'NO tienes acceso al sistema')
+
+    def str_to_ascii(self, cad):
+        resultado = ""
+        for c in cad:
+            resultado += str(ord(str(c)))
+        return resultado
 
 
 class Calculadora(QtGui.QDialog):
@@ -167,6 +173,7 @@ class AgregarUsr(QtGui.QDialog):
         self.setWindowTitle("Nuevo Usuario")
 
     def handleagrusr(self):
+        l = Login()
         f = open('../Practica1/Code/Input.txt','a')
-        f.write('username : ' + self.textUsr.text() + ' password original : ' + self.textPas.text() + '\n')
+        f.write('username : ' + self.textUsr.text() + ' password original : ' + l.str_to_ascii(self.textPas.text()) + '\n')
         f.close()
