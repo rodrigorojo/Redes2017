@@ -15,7 +15,10 @@ class ScientificCalculator(Calculator):
         if (tok[1] == "*"):
             return float(tok[0])*float(tok[2])
         elif (tok[1] == "/"):
-            return float(tok[0])/float(tok[2])
+            try:
+                return float(tok[0])/float(tok[2])
+            except ZeroDivisionError:
+                return "Error: No puedes dividir entre cero"
         elif (tok[1] == "mod"):
             return float(tok[0])%float(tok[2])
         elif (tok[1] == "^"):

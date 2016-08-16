@@ -16,7 +16,7 @@ class Calculator:
         elif (tok[1] == "-"):
             return float(tok[0])-float(tok[2])
         else :
-            print "Operacion no definida"
+            return "Error: Operacion Invalida"
 
     def tokenizer(self,exp):
         token1 = ""
