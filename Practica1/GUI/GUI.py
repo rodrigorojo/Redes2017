@@ -44,7 +44,7 @@ class Login(QtGui.QDialog):
     def str_to_ascii(self, cad):
         resultado = ""
         for c in cad:
-            resultado += str(ord(str(c)))
+            resultado += str(ord(str(c))+5)
         return resultado
 
 
