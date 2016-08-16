@@ -179,3 +179,4 @@ class AgregarUsr(QtGui.QDialog):
         f.write(Constants().USERNAME_DB + self.textUsr.text() + Constants().PASSWORD_DB + l.str_to_ascii(self.textPas.text()))
         f.write('\n')
         f.close()
+        QtGui.QMessageBox.information(self, "Informacion", "Se agrego al usuario",QtGui.QMessageBox.Ok)
