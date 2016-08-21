@@ -26,6 +26,9 @@ def get_ip_address():
     s.connect(("8.8.8.8", 80))
     return "%s"% (s.getsockname()[0])
 
+if __name__ == '__main__':
+    print get_ip_address()
+
 """**************************************************
  Clase auxiliar que implementa el metodo
 stop, para que el hilo se detenga externamente
