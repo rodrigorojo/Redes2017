@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import xmlrpclib
 import ApiClient
+import ApiServer
+from ApiServer import MyApiServer
+from ApiClient import MyApiClient
 #import AuxiliarFunctions
 #from Constants.AuxiliarFunctions import AuxiliarFunctions
 
@@ -23,21 +26,25 @@ class Channel:
     @param <int> contact_port: De trabajar de manera local
                 representa el puerto de la instancia del contacto
     **************************************************"""
-    def __init__(self, contact_ip = None, contact_port = None):
-        if (contact_port == 5000):
-            self.client = ApiClient(str("get_ip_address"), 5000)
-        else:
-            self.client = ApiClient("localhost",contact_port)
-
-        #if contact_ip is not "":
-        #    self.client = ApiClient(str(contact_ip), 5000)
-        #if contact_port:
-        #    self.client = ApiClient("localhost",contact_port)
-
+    def __init__(self, contact_ip = None, my_port = None,contact_port = None):
+        self.contact_ip = contact_ip
+        self.my_port = my_port
+        self.contact_port = contact_port
+        #Empieza el servidor
+        self.server = MyApiServer(self.my_port).server
+        api_server_thread = Thread(target=self.server.serve_forever )
+        api_server_thread.start()
+        #
+        c = MyApiClient("localhost", self.my_port)
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con
     el cual se estableció la conexion
     **************************************************"""
     def send_text(self, text):
-        client.client_send_message(text);
+        return c.client_send_message(text);
+
+if __name__ == '__main__':
+    c = Channel("",8001,8001)
+    print c.send_text("caca")
+    c.send_text("caca")
