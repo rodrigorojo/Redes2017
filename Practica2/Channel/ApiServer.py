@@ -6,6 +6,7 @@ import sys
 
 class MyApiServer:
     def __init__(self, my_port = None):
+        self.my_port = my_port
         self.server = SimpleXMLRPCServer(("localhost", int(my_port)), allow_none = True)
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
@@ -13,6 +14,11 @@ class MyApiServer:
         self.server.register_instance(self.funtionWrapper)
         print "El servidor: localhost: "+ str(my_port)+" empezo"
         self.server.serve_forever()
+
+    def start_server(self):
+        #server = MyApiServer(myPort).server
+        api_server_thread = Thread(target=self.server.serve_forever )
+        api_server_thread.start()
 
 class FunctionWrapper:
     def __init__(self):
@@ -25,6 +31,7 @@ class FunctionWrapper:
     ************************************************** """
     def sendMessage_wrapper(self, message):
         print message
+        return message
 
 
 def main(args):
