@@ -33,6 +33,7 @@ class Channel:
 
         server = ApiServer(self.my_port)
 
+        
         #Empieza el servidor
         #self.server = MyApiServer(int(self.my_port)).server
         #api_server_thread = Thread(target=self.server.serve_forever )
