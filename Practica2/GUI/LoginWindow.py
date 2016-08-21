@@ -34,7 +34,7 @@ class Login(QtGui.QDialog):
         self.setWindowTitle("Informacion")
 
     def login(self):
-        print type(int(self.textP1.text()))
+        #print type(int(self.textP1.text()))
         c = Channel("",int(self.textP1.text()),int(self.textP1.text()))
 
 #if __name__ == '__main__':

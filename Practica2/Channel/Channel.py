@@ -30,6 +30,7 @@ class Channel:
         self.contact_ip = contact_ip
         self.my_port = my_port
         self.contact_port = contact_port
+
         #Empieza el servidor
         self.server = MyApiServer(int(self.my_port)).server
         api_server_thread = Thread(target=self.server.serve_forever )
