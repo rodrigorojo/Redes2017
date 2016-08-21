@@ -1,4 +1,7 @@
 #! /usr/bin/env python
 
-#TODO
-
+class Constants(object):
+    INFO = "Informacion"
+    INFOPORT1 = "Cual es mi puerto?:"
+    INFOPORT2 = "Cual es el puerto del contacto?:"
+    ACC = "Acceder"
