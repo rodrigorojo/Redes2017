@@ -2,6 +2,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import os
+from Channel.Channel import Channel
 #from Constants.Constants import *
 
 class Login(QtGui.QDialog):
@@ -20,7 +21,7 @@ class Login(QtGui.QDialog):
 
         #self.buttonLogin = QPushButton(Constants().ACC, self)
         self.buttonLogin = QPushButton("Acceder", self)
-        #self.buttonLogin.clicked.connect(self.handleLogin)
+        self.buttonLogin.clicked.connect(self.login)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.P1)
@@ -31,5 +32,9 @@ class Login(QtGui.QDialog):
 
         #self.setWindowTitle(Constants().INFO)
         self.setWindowTitle("Informacion")
+
+    def login(self):
+        print type(int(self.textP1.text()))
+        c = Channel("",int(self.textP1.text()),int(self.textP1.text()))
 
 #if __name__ == '__main__':

@@ -31,7 +31,7 @@ class Channel:
         self.my_port = my_port
         self.contact_port = contact_port
         #Empieza el servidor
-        self.server = MyApiServer(self.my_port).server
+        self.server = MyApiServer(int(self.my_port)).server
         api_server_thread = Thread(target=self.server.serve_forever )
         api_server_thread.start()
         #
@@ -46,5 +46,5 @@ class Channel:
 
 if __name__ == '__main__':
     c = Channel("",8001,8001)
-    print c.send_text("caca")
-    c.send_text("caca")
+    print c.send_text("hola")
+    c.send_text("hola")
