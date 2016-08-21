@@ -31,12 +31,15 @@ class Channel:
         self.my_port = my_port
         self.contact_port = contact_port
 
+        server = ApiServer(self.my_port)
+
         #Empieza el servidor
-        self.server = MyApiServer(int(self.my_port)).server
-        api_server_thread = Thread(target=self.server.serve_forever )
-        api_server_thread.start()
-        #
-        c = MyApiClient("localhost", self.my_port)
+        #self.server = MyApiServer(int(self.my_port)).server
+        #api_server_thread = Thread(target=self.server.serve_forever )
+        #api_server_thread.start()
+        #print "aqui"
+        #c1 = MyApiClient("localhost", self.my_port)
+
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con

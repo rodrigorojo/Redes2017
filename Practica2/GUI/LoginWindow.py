@@ -2,7 +2,9 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from Channel.Channel import Channel
+from Channel.ApiServer import *
 from Constants.Constants import *
+import threading
 
 class Login(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -29,6 +31,9 @@ class Login(QtGui.QDialog):
         self.setWindowTitle(Constants().INFO)
 
     def login(self):
+        print int(str(self.textP1.text()))
+        ser = MyApiServer(int(str(self.textP1.text())))
         #print type(int(self.textP1.text()))
-        c = Channel("",int(self.textP1.text()),int(self.textP1.text()))
+        #c = Channel("",int(self.textP1.text()),int(self.textP1.text()))
+
         self.accept()

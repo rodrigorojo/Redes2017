@@ -12,7 +12,7 @@ class MyApiClient:
 
     def client_send_message(self, message):
         try:
-            self.server.sendMessage_wrapper(str(message))
+            return self.server.sendMessage_wrapper(str(message))
         except:
             print "ERROR: Puerto incorrecto"
 

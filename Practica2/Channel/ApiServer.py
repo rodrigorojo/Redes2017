@@ -3,6 +3,7 @@
 import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
+from threading import Thread
 
 class MyApiServer:
     def __init__(self, my_port = None):
@@ -13,12 +14,10 @@ class MyApiServer:
         self.funtionWrapper = FunctionWrapper()
         self.server.register_instance(self.funtionWrapper)
         print "El servidor: localhost: "+ str(my_port)+" empezo"
-        self.server.serve_forever()
-
-    def start_server(self):
-        #server = MyApiServer(myPort).server
+        #self.server.serve_forever()
         api_server_thread = Thread(target=self.server.serve_forever )
         api_server_thread.start()
+
 
 class FunctionWrapper:
     def __init__(self):
