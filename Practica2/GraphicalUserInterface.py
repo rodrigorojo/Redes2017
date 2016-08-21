@@ -15,9 +15,11 @@
 # Distributed under terms of the MIT license.        #
 #################################################### #
 import sys, getopt
+from PyQt4 import QtGui
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from GUI.LoginWindow import Login
+from GUI.ChatWindow import Chat
 
 # **************************************************
 #  Definicion de la funcion principal
@@ -37,7 +39,8 @@ def main(argv):
     login = Login()
 
     if login.exec_() == QtGui.QDialog.Accepted:
-        print "lol"
+        chat = Chat()
+        chat.show()
     #TODO Llamar a su ventana de login
     sys.exit(app.exec_())
 
