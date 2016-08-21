@@ -2,7 +2,7 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import os
-#from Constants.Constants import Constants
+#from Constants.Constants import *
 
 class Login(QtGui.QDialog):
     def __init__(self, parent=None):
@@ -32,11 +32,4 @@ class Login(QtGui.QDialog):
         #self.setWindowTitle(Constants().INFO)
         self.setWindowTitle("Informacion")
 
-if __name__ == '__main__':
-
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    login = Login()
-
-    if login.exec_() == QtGui.QDialog.Accepted:
-        print "lol"
+#if __name__ == '__main__':

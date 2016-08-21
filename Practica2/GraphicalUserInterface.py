@@ -17,7 +17,7 @@
 import sys, getopt
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-
+from GUI.LoginWindow import Login
 
 # **************************************************
 #  Definicion de la funcion principal
@@ -34,6 +34,10 @@ def main(argv):
         local = False
     app = QApplication(sys.argv)
     #app = QtGui.QApplication(sys.argv)
+    login = Login()
+
+    if login.exec_() == QtGui.QDialog.Accepted:
+        print "lol"
     #TODO Llamar a su ventana de login
     sys.exit(app.exec_())
 
