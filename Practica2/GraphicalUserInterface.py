@@ -37,8 +37,11 @@ def main(argv):
     app = QApplication(sys.argv)
     #app = QtGui.QApplication(sys.argv)
     login = Login()
+    caca = login.regresa_str
+    #login.
 
     if login.exec_() == QtGui.QDialog.Accepted:
+        print type(caca)
         chat = Chat()
         chat.show()
         chat2 = Chat()

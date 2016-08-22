@@ -4,11 +4,17 @@ from PyQt4.QtGui import *
 from Constants.Constants import *
 from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
+from LoginWindow import *
 
 class Chat(QtGui.QDialog):
-    def __init__(self, parent=None):
-        super(Chat, self).__init__(parent)
+    def __init__(self, parent=None, numCliente = None):
+        #self.cliente = None
+        #if(numcliente == "1"):
+        #    self.cliente = c.crea_cliente1();
+        #else:
+        #    self.cliente = c.crea_cliente2();
 
+        super(Chat, self).__init__(parent)
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
@@ -31,6 +37,7 @@ class Chat(QtGui.QDialog):
         self.setWindowTitle(Constants().CHAT)
 
     def responder(self):
+
         mc = MyApiClient("localhost",8001)
         #self.Conv = [" "]
         print "oprimio boton responder con texto: " + str(self.restext.text())

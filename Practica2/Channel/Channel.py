@@ -5,6 +5,7 @@ import ApiClient
 import ApiServer
 from ApiServer import MyApiServer
 from ApiClient import MyApiClient
+from threading import Thread
 #import AuxiliarFunctions
 #from Constants.AuxiliarFunctions import AuxiliarFunctions
 
@@ -30,17 +31,13 @@ class Channel:
         self.contact_ip = contact_ip
         self.my_port = my_port
         self.contact_port = contact_port
+        self.ser = MyApiServer(self.my_port)
 
-        server = ApiServer(self.my_port)
-
+    def crea_cliente1(self):
+        self.cliente1 = MyApiClient("localhost",self.my_port)
         
-        #Empieza el servidor
-        #self.server = MyApiServer(int(self.my_port)).server
-        #api_server_thread = Thread(target=self.server.serve_forever )
-        #api_server_thread.start()
-        #print "aqui"
-        #c1 = MyApiClient("localhost", self.my_port)
-
+    def crea_cliente2(self):
+        self.cliente2 = MyApiClient("localhost",self.contact_port)
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con

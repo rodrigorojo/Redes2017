@@ -19,7 +19,7 @@ class Login(QtGui.QDialog):
         self.textP2 = QLineEdit(self)
 
         self.buttonLogin = QPushButton(Constants().ACC, self)
-        self.buttonLogin.clicked.connect(self.login)
+        self.buttonLogin.clicked.connect(self.button_login)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.P1)
@@ -30,10 +30,14 @@ class Login(QtGui.QDialog):
 
         self.setWindowTitle(Constants().INFO)
 
-    def login(self):
+    def button_login(self):
         print int(str(self.textP1.text()))
-        ser = MyApiServer(int(str(self.textP1.text())))
-        #print type(int(self.textP1.text()))
-        #c = Channel("",int(self.textP1.text()),int(self.textP1.text()))
-
+        c = Channel("",int(str(self.textP1.text())),int(str(self.textP2.text())))
         self.accept()
+        return c
+
+    def regresa_str(self):
+        tmp = []
+        tmp.append(int(str(self.textP1.text())))
+        tmp.append(int(str(self.textP2.text())))
+        return tmp
