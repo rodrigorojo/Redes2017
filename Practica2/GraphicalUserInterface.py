@@ -37,10 +37,10 @@ def main(argv):
     app = QApplication(sys.argv)
     #app = QtGui.QApplication(sys.argv)
     login = Login()
-    lst = login.regresa_str()
     #login.
 
     if login.exec_() == QtGui.QDialog.Accepted:
+        lst = login.regresa_str()
         print "esto es el 1------"
         print lst[0]
         chat = Chat(puerto = lst[0])
