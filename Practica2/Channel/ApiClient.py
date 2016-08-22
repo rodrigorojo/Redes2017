@@ -11,10 +11,12 @@ class MyApiClient:
             self.server = xmlrpclib.Server('http://'+ host +':'+str(contact_port), allow_none = True)
 
     def client_send_message(self, message):
-        try:
-            return self.server.sendMessage_wrapper(str(message))
-        except:
-            print "ERROR: Puerto incorrecto"
+        #try:
+        return self.server.add_to_conversation(str(message))
+
+
+        #except:
+        #    print "ERROR"
 
 if __name__ == '__main__':
     c = MyApiClient("localhost",8001)

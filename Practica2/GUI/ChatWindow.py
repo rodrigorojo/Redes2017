@@ -32,7 +32,10 @@ class Chat(QtGui.QDialog):
 
     def responder(self):
         mc = MyApiClient("localhost",8001)
-
+        #self.Conv = [" "]
         print "oprimio boton responder con texto: " + str(self.restext.text())
-        self.Conv.append(mc.client_send_message(str(self.restext.text())))
+        tmplst = mc.client_send_message(str(self.restext.text()))#)
+        for elm in tmplst:
+            self.Conv.append(elm)
+        # = tmplst
         self.restext.setText("")

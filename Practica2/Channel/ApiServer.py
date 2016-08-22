@@ -6,20 +6,36 @@ import sys
 from threading import Thread
 
 class MyApiServer:
+
+
     def __init__(self, my_port = None):
+        global conversation
+        conversation = []
+        #self.conversationstr = ""
         self.my_port = my_port
         self.server = SimpleXMLRPCServer(("localhost", int(my_port)), allow_none = True)
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
         self.functionWrapper = FunctionWrapper()
         self.server.register_instance(self.functionWrapper)
+        self.server.register_function(self.add_to_conversation, "add_to_conversation")
         print "El servidor: localhost: "+ str(my_port)+" empezo"
         #self.server.serve_forever()
         api_server_thread = Thread(target=self.server.serve_forever )
         api_server_thread.start()
 
     def add_to_conversation(self, msg):
-        self.conversation = self.conversation + "\n" + msg
+        conversation.append(msg)
+        return conversation
+        #for txt in conversation:
+        #    print txt
+
+    def get_conv_to_string(self):
+        for txt in conversation:
+            conversationstr += text
+            conversationstr += "\n"
+        print conversationstr
+        return conversationstr
 
 class FunctionWrapper:
     def __init__(self):
