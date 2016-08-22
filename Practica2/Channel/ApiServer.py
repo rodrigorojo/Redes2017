@@ -48,13 +48,6 @@ class FunctionWrapper:
     ************************************************** """
     def sendMessage_wrapper(self, message):
         return  message
-        #print conversation + message
-        #return message
-        #new_conv = conv + "\n" + message
-        #conv = new_conv
-        #print conv
-        #return conv
-
 
 def main(args):
    myPort = int(args[0])

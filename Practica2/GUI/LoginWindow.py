@@ -41,8 +41,4 @@ class Login(QtGui.QDialog):
         tmp = []
         tmp.append((str(self.textP1.text())))
         tmp.append((str(self.textP2.text())))
-        print "acacacacacacaccacacacaacac"
-        print tmp[0]
-        print tmp[1]
-        print "-------"
         return tmp
