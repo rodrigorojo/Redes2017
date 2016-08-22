@@ -41,6 +41,8 @@ def main(argv):
     if login.exec_() == QtGui.QDialog.Accepted:
         chat = Chat()
         chat.show()
+        chat2 = Chat()
+        chat2.show()
     #TODO Llamar a su ventana de login
     sys.exit(app.exec_())
 

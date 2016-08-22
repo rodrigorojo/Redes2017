@@ -11,13 +11,15 @@ class MyApiServer:
         self.server = SimpleXMLRPCServer(("localhost", int(my_port)), allow_none = True)
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
-        self.funtionWrapper = FunctionWrapper()
-        self.server.register_instance(self.funtionWrapper)
+        self.functionWrapper = FunctionWrapper()
+        self.server.register_instance(self.functionWrapper)
         print "El servidor: localhost: "+ str(my_port)+" empezo"
         #self.server.serve_forever()
         api_server_thread = Thread(target=self.server.serve_forever )
         api_server_thread.start()
 
+    def add_to_conversation(self, msg):
+        self.conversation = self.conversation + "\n" + msg
 
 class FunctionWrapper:
     def __init__(self):
@@ -29,8 +31,13 @@ class FunctionWrapper:
     hacer lo necesario para mostrar el texto en nuestra pantalla.
     ************************************************** """
     def sendMessage_wrapper(self, message):
-        print message
-        return message
+        return  message
+        #print conversation + message
+        #return message
+        #new_conv = conv + "\n" + message
+        #conv = new_conv
+        #print conv
+        #return conv
 
 
 def main(args):

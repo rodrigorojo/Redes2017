@@ -13,6 +13,7 @@ class Chat(QtGui.QDialog):
         self.Con.setText(Constants().CONV)
 
         self.Conv = QTextEdit(self)
+        self.Conv.setReadOnly(True)
 
         self.restext = QLineEdit(self)
 
@@ -31,6 +32,7 @@ class Chat(QtGui.QDialog):
 
     def responder(self):
         mc = MyApiClient("localhost",8001)
-        #temp = self.Conv.text()
+
+        print "oprimio boton responder con texto: " + str(self.restext.text())
         self.Conv.append(mc.client_send_message(str(self.restext.text())))
-        self.restText.setText("")
+        self.restext.setText("")
