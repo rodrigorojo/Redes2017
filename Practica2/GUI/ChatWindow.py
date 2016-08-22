@@ -7,12 +7,12 @@ from Channel.Channel import Channel
 from LoginWindow import *
 
 class Chat(QtGui.QDialog):
-    def __init__(self, parent=None, numCliente = None):
+    def __init__(self, parent=None, puerto = None):
         #self.cliente = None
-        #if(numcliente == "1"):
-        #    self.cliente = c.crea_cliente1();
-        #else:
-        #    self.cliente = c.crea_cliente2();
+        #self.cliente = c.crea_cliente1(puerto);
+        #self.cliente = c.crea_cliente2();
+        print "este compapapapapap"
+        print puerto
 
         super(Chat, self).__init__(parent)
         self.Con = QLabel(self)

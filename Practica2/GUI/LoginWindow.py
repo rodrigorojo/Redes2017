@@ -34,10 +34,13 @@ class Login(QtGui.QDialog):
         print int(str(self.textP1.text()))
         c = Channel("",int(str(self.textP1.text())),int(str(self.textP2.text())))
         self.accept()
+        regresa_str()
         return c
 
     def regresa_str(self):
         tmp = []
-        tmp.append(int(str(self.textP1.text())))
-        tmp.append(int(str(self.textP2.text())))
+        tmp.append((str(self.textP1.text())))
+        tmp.append((str(self.textP2.text())))
+        print "acacacacacacaccacacacaacac"
+        print tmp[0]
         return tmp

@@ -37,14 +37,17 @@ def main(argv):
     app = QApplication(sys.argv)
     #app = QtGui.QApplication(sys.argv)
     login = Login()
-    caca = login.regresa_str
+    lst = login.regresa_str()
     #login.
 
     if login.exec_() == QtGui.QDialog.Accepted:
-        print type(caca)
-        chat = Chat()
+        print "esto es el 1------"
+        print lst[0]
+        chat = Chat(puerto = lst[0])
         chat.show()
-        chat2 = Chat()
+        print "esto es el 2------"
+        print lst[1]
+        chat2 = Chat(puerto = lst[1])
         chat2.show()
     #TODO Llamar a su ventana de login
     sys.exit(app.exec_())
