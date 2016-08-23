@@ -31,18 +31,11 @@ class Channel:
         self.contact_ip = contact_ip
         self.my_port = my_port
         self.contact_port = contact_port
-
-        server = MyApiServer(self.my_port)
-        api_server_thread = Thread(target = server.init_server)
+        self.server = MyApiServer(self.my_port)
+        api_server_thread = Thread(target = self.server.init_server)
+        api_server_thread.daemon=True
         api_server_thread.start()
         self.client = MyApiClient("localhost", self.contact_port)
-
-        #if(self.my_port == self.contact_port):
-        #    self.servig = MyApiServer(self.my_port)
-        #else:
-        #    self.ser = MyApiServer(self.my_port)
-        #    self.serv = MyApiServer(self.contact_port)
-
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con

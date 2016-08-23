@@ -11,24 +11,29 @@ class MyApiServer:
     def __init__(self, my_port = None):
         global conversation
         conversation = []
-        #self.conversationstr = ""
         self.my_port = my_port
         self.server = SimpleXMLRPCServer(("localhost", int(my_port)), allow_none = True)
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
         self.functionWrapper = FunctionWrapper()
         self.server.register_instance(self.functionWrapper)
-        self.server.register_function(self.add_to_conversation, "add_to_conversation")
+        self.server.register_function(self.recive_message, "recive_message")
         print "El servidor: localhost: "+ str(my_port)+" empezo"
 
     def init_server(self):
         self.server.serve_forever()
 
-    def add_to_conversation(self, msg):
+    def recive_message(self, msg):
         conversation.append(msg)
         return conversation
         #for txt in conversation:
         #    print txt
+
+    def get_lst_conv(self, qline):
+        for elm in conversation:
+            qline.append(elm)
+            #qline = conversation
+            #return qline
 
     def get_conv_to_string(self):
         for txt in conversation:

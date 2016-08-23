@@ -12,14 +12,5 @@ class MyApiClient:
             self.server = xmlrpclib.Server('http://'+ host +':'+str(contact_port), allow_none = True)
 
     def client_send_message(self, message):
-        #try:
         print "cliente en puerto "+str(self.contact_port)+"envio mensaje"
-        return self.server.add_to_conversation(str(message))
-
-
-        #except:
-        #    print "ERROR"
-
-if __name__ == '__main__':
-    c = MyApiClient("localhost",8001)
-    c.client_send_message(sys.argv[1:])
+        return self.server.recive_message(str(message))
