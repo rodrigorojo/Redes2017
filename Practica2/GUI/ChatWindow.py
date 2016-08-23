@@ -42,3 +42,10 @@ class Chat(QtGui.QDialog):
             self.Conv.append(elm)
         # = tmplst
         self.restext.setText("")
+
+    def sincroniza (self, otro = None):
+        print "esta sincronizando"
+        tmplst = self.mc.client_send_message(str(self.restext.text()))#)
+        for elm in tmplst:
+            #self.Conv.append(elm)
+            otro.Conv.append(elm)

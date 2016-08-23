@@ -44,6 +44,7 @@ def main(argv):
         chat = Chat(puerto = lst[1])
         chat.show()
         chat2 = Chat(puerto = lst[0])
+        chat.sincroniza(otro = chat2)
         chat2.show()
     #TODO Llamar a su ventana de login
     sys.exit(app.exec_())
