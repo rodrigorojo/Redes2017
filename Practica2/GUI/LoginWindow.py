@@ -5,7 +5,9 @@ from Channel.Channel import Channel
 from Channel.ApiServer import *
 from Constants.Constants import *
 import threading
-
+"""**************************************************
+Clase para crear una ventana de login
+**************************************************"""
 class Login(QtGui.QDialog):
     def __init__(self, parent=None):
         super(Login, self).__init__(parent)
@@ -29,15 +31,17 @@ class Login(QtGui.QDialog):
         layout.addWidget(self.buttonLogin)
 
         self.setWindowTitle(Constants().INFO)
-
+    """**************************************************
+    Funcion que usa el boton buttonLogin entrar
+    **************************************************"""
     def button_login(self):
         print int(str(self.textP1.text()))
-        #c1 = Channel("",int(str(self.textP1.text())),int(str(self.textP2.text())))
-        #c2 = Channel("",int(str(self.textP2.text())),int(str(self.textP1.text())))
         self.accept()
         self.regresa_str()
         return c
-
+    """**************************************************
+    Funcion auxiliar
+    **************************************************"""
     def regresa_str(self):
         tmp = []
         tmp.append((str(self.textP1.text())))

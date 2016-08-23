@@ -1,5 +1,7 @@
 #! /usr/bin/env python
-
+"""**************************************************
+Clase que contiene todas las constantes usadas en esta practica
+**************************************************"""
 class Constants(object):
     INFO = "Informacion"
     INFOPORT1 = "Cual es mi puerto?:"

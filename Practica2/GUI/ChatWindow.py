@@ -5,7 +5,9 @@ from Constants.Constants import *
 from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
 from LoginWindow import *
-
+"""**************************************************
+La instancia de esta clase crea una ventana de chat con un canal
+**************************************************"""
 class Chat(QtGui.QDialog):
     def __init__(self, parent=None, my_port = None,contact_port = None):
         super(Chat, self).__init__(parent)
@@ -31,13 +33,18 @@ class Chat(QtGui.QDialog):
 
         self.setWindowTitle(Constants().CHAT)
 
+    """**************************************************
+    Funcion que usa el boton buttonres para enviar el mensaje
+    **************************************************"""
     def responder(self):
         #print "oprimio boton responder con texto: " + str(self.restext.text())
         tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)
         for elm in tmplst:
             self.Conv.append(elm)
         self.restext.setText(Constants().EMPTY_STR)
-
+    """**************************************************
+    Funcion auxiliar
+    **************************************************"""
     def sincroniza (self, otro = None):
         #print "esta sincronizando"
         tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)

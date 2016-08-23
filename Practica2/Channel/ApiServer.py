@@ -5,9 +5,14 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from threading import Thread
 from Constants.Constants import *
-
+"""**************************************************
+Clase para crear un servidor xmlrpc
+**************************************************"""
 class MyApiServer:
-
+    """**************************************************
+    Constructor de la clase
+    @param <str> my_port: El puerto en el que se pondra el servidor
+    **************************************************"""
     def __init__(self, my_port = None):
         global conversation
         conversation = []
@@ -19,13 +24,21 @@ class MyApiServer:
         self.server.register_instance(self.functionWrapper)
         self.server.register_function(self.recive_message, Constants().RECIVE_MESSAGE_FUNC)
 
+    """**************************************************
+    Fucnion para empezar el servidor
+    **************************************************"""
     def init_server(self):
         self.server.serve_forever()
-
+    """**************************************************
+    Funcion que recive un mensaje y lo agrega a la lista de mensajes
+    @param <str> msg: mensaje que recive
+    **************************************************"""
     def recive_message(self, msg):
         conversation.append(msg)
         return conversation
-
+    """**************************************************
+    Fucnion auxiliar
+    **************************************************"""
     def get_lst_conv(self, qline):
         for elm in conversation:
             qline.append(elm)
