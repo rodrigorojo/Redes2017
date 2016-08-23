@@ -20,9 +20,9 @@ class MyApiServer:
         self.server.register_instance(self.functionWrapper)
         self.server.register_function(self.add_to_conversation, "add_to_conversation")
         print "El servidor: localhost: "+ str(my_port)+" empezo"
-        #self.server.serve_forever()
-        api_server_thread = Thread(target=self.server.serve_forever )
-        api_server_thread.start()
+
+    def init_server(self):
+        self.server.serve_forever()
 
     def add_to_conversation(self, msg):
         conversation.append(msg)

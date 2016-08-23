@@ -7,13 +7,11 @@ from Channel.Channel import Channel
 from LoginWindow import *
 
 class Chat(QtGui.QDialog):
-    def __init__(self, parent=None, puerto = None):
-        #self.cliente = None
-        #self.cliente = c.crea_cliente1(puerto);
-        #self.cliente = c.crea_cliente2();
+    def __init__(self, parent=None, my_port = None,contact_port = None):
         super(Chat, self).__init__(parent)
-        self.puerto = puerto
-        self.mc = MyApiClient("localhost",self.puerto)
+        #self.puerto = puerto
+        self.mc = Channel("", int(my_port), int(contact_port))
+        #self.mc = MyApiClient("localhost",self.puerto)
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
@@ -37,7 +35,7 @@ class Chat(QtGui.QDialog):
 
     def responder(self):
         print "oprimio boton responder con texto: " + str(self.restext.text())
-        tmplst = self.mc.client_send_message(str(self.restext.text()))#)
+        tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)
         for elm in tmplst:
             self.Conv.append(elm)
         # = tmplst
@@ -45,7 +43,7 @@ class Chat(QtGui.QDialog):
 
     def sincroniza (self, otro = None):
         print "esta sincronizando"
-        tmplst = self.mc.client_send_message(str(self.restext.text()))#)
+        tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)
         for elm in tmplst:
             #self.Conv.append(elm)
             otro.Conv.append(elm)

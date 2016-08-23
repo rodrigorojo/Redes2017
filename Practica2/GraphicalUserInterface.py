@@ -41,9 +41,9 @@ def main(argv):
 
     if login.exec_() == QtGui.QDialog.Accepted:
         lst = login.regresa_str()
-        chat = Chat(puerto = lst[1])
+        chat = Chat(my_port = lst[1],contact_port = lst[0])
         chat.show()
-        chat2 = Chat(puerto = lst[0])
+        chat2 = Chat(my_port = lst[0],contact_port = lst[1])
         chat.sincroniza(otro = chat2)
         chat2.show()
     #TODO Llamar a su ventana de login

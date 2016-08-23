@@ -32,7 +32,8 @@ class Login(QtGui.QDialog):
 
     def button_login(self):
         print int(str(self.textP1.text()))
-        c = Channel("",int(str(self.textP1.text())),int(str(self.textP2.text())))
+        #c1 = Channel("",int(str(self.textP1.text())),int(str(self.textP2.text())))
+        #c2 = Channel("",int(str(self.textP2.text())),int(str(self.textP1.text())))
         self.accept()
         self.regresa_str()
         return c
