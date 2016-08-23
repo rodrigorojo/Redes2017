@@ -32,10 +32,11 @@ class Channel:
         self.my_port = my_port
         self.contact_port = contact_port
         self.ser = MyApiServer(self.my_port)
+        self.serv = MyApiServer(self.contact_port)
 
     def crea_cliente1(self):
         self.cliente1 = MyApiClient("localhost",self.my_port)
-        
+
     def crea_cliente2(self):
         self.cliente2 = MyApiClient("localhost",self.contact_port)
 

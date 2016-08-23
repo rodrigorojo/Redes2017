@@ -11,8 +11,9 @@ class Chat(QtGui.QDialog):
         #self.cliente = None
         #self.cliente = c.crea_cliente1(puerto);
         #self.cliente = c.crea_cliente2();
-        self.puerto = puerto
         super(Chat, self).__init__(parent)
+        self.puerto = puerto
+        self.mc = MyApiClient("localhost",self.puerto)
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
@@ -35,11 +36,8 @@ class Chat(QtGui.QDialog):
         self.setWindowTitle(Constants().CHAT)
 
     def responder(self):
-
-        mc = MyApiClient("localhost",self.puerto)
-        #self.Conv = [" "]
         print "oprimio boton responder con texto: " + str(self.restext.text())
-        tmplst = mc.client_send_message(str(self.restext.text()))#)
+        tmplst = self.mc.client_send_message(str(self.restext.text()))#)
         for elm in tmplst:
             self.Conv.append(elm)
         # = tmplst
