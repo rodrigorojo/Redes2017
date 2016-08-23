@@ -6,6 +6,7 @@ import ApiServer
 from ApiServer import MyApiServer
 from ApiClient import MyApiClient
 from threading import Thread
+from Constants.Constants import *
 #import AuxiliarFunctions
 #from Constants.AuxiliarFunctions import AuxiliarFunctions
 
@@ -35,7 +36,7 @@ class Channel:
         api_server_thread = Thread(target = self.server.init_server)
         api_server_thread.daemon=True
         api_server_thread.start()
-        self.client = MyApiClient("localhost", self.contact_port)
+        self.client = MyApiClient(Constants().LOCALHOST, self.contact_port)
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con
@@ -43,8 +44,3 @@ class Channel:
     **************************************************"""
     def send_text(self, text):
         return c.client_send_message(text);
-
-if __name__ == '__main__':
-    c = Channel("",8001,8001)
-    print c.send_text("hola")
-    c.send_text("hola")

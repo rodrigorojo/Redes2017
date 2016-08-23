@@ -8,3 +8,8 @@ class Constants(object):
     CHAT = "Chat"
     CONV = "Conversacion"
     RES = "Responde"
+    RECIVE_MESSAGE_FUNC = "recive_message"
+    EMPTY_STR = ""
+    LOCALHOST = "localhost"
+    HTTP = "http://"
+    TWO_DOTS = ":"
