@@ -20,6 +20,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from GUI.LoginWindow import Login
 from GUI.ChatWindow import Chat
+from GUI.CallWindow import Call
 
 # **************************************************
 #  Definicion de la funcion principal
@@ -46,7 +47,14 @@ def main(argv):
         chat2 = Chat(my_port = lst[0],contact_port = lst[1])
         chat.sincroniza(otro = chat2)
         chat2.show()
-    #TODO Llamar a su ventana de login
+        if(chat.exec_() == QtGui.QDialog.Accepted):
+            print "entro"
+            call = Call()
+            call.show()
+        if(chat2.exec_() == QtGui.QDialog.Accepted):
+            print "entro"
+            call2 = Call()
+            call2.show()
     sys.exit(app.exec_())
 
 

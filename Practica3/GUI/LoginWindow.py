@@ -38,7 +38,7 @@ class Login(QtGui.QDialog):
         print int(str(self.textP1.text()))
         self.accept()
         self.regresa_str()
-        return c
+        #return c
     """**************************************************
     Funcion auxiliar
     **************************************************"""
