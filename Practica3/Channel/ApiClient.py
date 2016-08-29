@@ -18,7 +18,7 @@ class MyApiClient:
         self.host = host
         if contact_port and host:
             #print "Nuevo Cliente en puerto: "+ str(contact_port)
-            self.server = xmlrpclib.Server(Constants().HTTP+ host +Constants().TWO_DOTS+str(contact_port), allow_none = True)
+            self.server = xmlrpclib.ServerProxy(Constants().HTTP+ host +Constants().TWO_DOTS+str(contact_port), allow_none = True)
             print "cliente en: "+Constants().HTTP+ host +Constants().TWO_DOTS+str(contact_port)
     """**************************************************
     Funcion para enviar mensajes
