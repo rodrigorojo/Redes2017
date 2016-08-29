@@ -38,6 +38,7 @@ class MyApiServer:
     @param <str> msg: mensaje que recive
     **************************************************"""
     def recive_message(self, msg):
+        print "recive_message: " +msg
         conversation.append(msg)
         return conversation
     """**************************************************
