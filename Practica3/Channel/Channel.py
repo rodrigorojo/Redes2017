@@ -7,6 +7,7 @@ from ApiServer import MyApiServer
 from ApiClient import MyApiClient
 from threading import Thread
 from Constants.Constants import *
+from Constants.AuxiliarFunctions import get_ip_address
 #import AuxiliarFunctions
 #from Constants.AuxiliarFunctions import AuxiliarFunctions
 
@@ -32,11 +33,20 @@ class Channel:
         self.contact_ip = contact_ip
         self.my_port = my_port
         self.contact_port = contact_port
-        self.server = MyApiServer(self.my_port)
-        api_server_thread = Thread(target = self.server.init_server)
-        api_server_thread.daemon=True
-        api_server_thread.start()
-        self.client = MyApiClient(Constants().LOCALHOST, self.contact_port)
+
+        if( contact_ip == None):
+            self.server = MyApiServer(my_port = self.my_port)
+            api_server_thread = Thread(target = self.server.init_server)
+            api_server_thread.daemon=True
+            api_server_thread.start()
+            self.client = MyApiClient(Constants().LOCALHOST, contact_port = self.contact_port)
+        else:
+            self.server = MyApiServer(ip = get_ip_address(), my_port= 5000)
+            api_server_thread = Thread(target = self.server.init_server)
+            api_server_thread.daemon = True
+            api_server_thread.start()
+            self.client = MyApiClient(self.contact_ip, 5000)
+
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con

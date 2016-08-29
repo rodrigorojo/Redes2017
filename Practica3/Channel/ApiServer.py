@@ -13,11 +13,15 @@ class MyApiServer:
     Constructor de la clase
     @param <str> my_port: El puerto en el que se pondra el servidor
     **************************************************"""
-    def __init__(self, my_port = None):
+    def __init__(self, ip = None, my_port = None):
         global conversation
         conversation = []
         self.my_port = my_port
-        self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
+        if(ip == None):
+            self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
+        else:
+            self.server = SimpleXMLRPCServer((ip, int(my_port)), allow_none = True)
+            print "servidor en ip: " +ip+" : "+ str(int(my_port))
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
         self.functionWrapper = FunctionWrapper()

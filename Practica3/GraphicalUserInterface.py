@@ -21,7 +21,9 @@ from PyQt4.QtCore import *
 from GUI.LoginWindow import Login
 from GUI.ChatWindow import Chat
 from GUI.CallWindow import Call
-
+from GUI.IPWindow import IPAdress
+from GUI.ChatIPWindow import ChatIP
+from Constants.AuxiliarFunctions import get_ip_address
 # **************************************************
 #  Definicion de la funcion principal
 #**************************************************
@@ -37,26 +39,35 @@ def main(argv):
         local = False
     app = QApplication(sys.argv)
     #app = QtGui.QApplication(sys.argv)
-    login = Login()
     #login.
-
-    if login.exec_() == QtGui.QDialog.Accepted:
-        lst = login.regresa_str()
-        chat = Chat(my_port = lst[1],contact_port = lst[0])
-        chat.show()
-        chat2 = Chat(my_port = lst[0],contact_port = lst[1])
-        chat.sincroniza(otro = chat2)
-        chat2.show()
-        if(chat.exec_() == QtGui.QDialog.Accepted):
-            print "entro"
-            call = Call()
-            call.show()
-        if(chat2.exec_() == QtGui.QDialog.Accepted):
-            print "entro"
-            call2 = Call()
-            call2.show()
+    if local:
+        login = Login()
+        if login.exec_() == QtGui.QDialog.Accepted:
+            lst = login.regresa_str()
+            chat = Chat(my_port = lst[1],contact_port = lst[0])
+            chat.show()
+            chat2 = Chat(my_port = lst[0],contact_port = lst[1])
+            chat.sincroniza(otro = chat2)
+            chat2.show()
+            if(chat.exec_() == QtGui.QDialog.Accepted):
+                call = Call()
+                call.show()
+            if(chat2.exec_() == QtGui.QDialog.Accepted):
+                call2 = Call()
+                call2.show()
+        sys.exit(app.exec_())
+    else:
+        ipw = IPAdress()
+        ipw.show()
+        if ipw.exec_() == QtGui.QDialog.Accepted:
+            contact_ip = ipw.regresa_contact_ip()
+            print "contact_ip---->"+contact_ip
+            chat = ChatIP(ip = contact_ip)
+            chat.show()
+        sys.exit(app.exec_())
     sys.exit(app.exec_())
-
-
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    if(sys.argv[1:] != None):
+        main(sys.argv[1:])
+    else:
+        main("")

@@ -5,13 +5,14 @@ from Constants.Constants import *
 from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
 from LoginWindow import *
+from Constants.AuxiliarFunctions import *
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
-class Chat(QtGui.QDialog):
-    def __init__(self, parent=None, my_port = None,contact_port = None):
-        super(Chat, self).__init__(parent)
-        self.mc = Channel(my_port = int(my_port),contact_port = int(contact_port))
+class ChatIP(QtGui.QDialog):
+    def __init__(self,parent=None,ip = None):
+        super(ChatIP, self).__init__(parent)
+        self.mc = Channel(ip, 5000, 5000)
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
@@ -55,6 +56,6 @@ class Chat(QtGui.QDialog):
     **************************************************"""
     def sincroniza (self, otro = None):
         #print "esta sincronizando"
-        tmplst = self.mc.client.client_send_message(str(self.restext.text()))
+        tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)
         for elm in tmplst:
             otro.Conv.append(elm)
