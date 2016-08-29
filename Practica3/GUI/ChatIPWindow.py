@@ -12,7 +12,9 @@ La instancia de esta clase crea una ventana de chat con un canal
 class ChatIP(QtGui.QDialog):
     def __init__(self,parent=None,ip = None):
         super(ChatIP, self).__init__(parent)
+
         self.mc = Channel(ip, 5000, 5000)
+
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 

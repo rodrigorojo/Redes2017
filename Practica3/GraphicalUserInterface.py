@@ -22,7 +22,7 @@ from GUI.LoginWindow import Login
 from GUI.ChatWindow import Chat
 from GUI.CallWindow import Call
 from GUI.IPWindow import IPAdress
-from GUI.ChatIPWindow import ChatIP
+#from GUI.ChatIPWindow import ChatIP
 from Constants.AuxiliarFunctions import get_ip_address
 # **************************************************
 #  Definicion de la funcion principal
@@ -62,8 +62,11 @@ def main(argv):
         if ipw.exec_() == QtGui.QDialog.Accepted:
             contact_ip = ipw.regresa_contact_ip()
             print "contact_ip---->"+contact_ip
-            chat = ChatIP(ip = contact_ip)
+            chat = Chat(ip = contact_ip)
             chat.show()
+            if(chat.exec_() == QtGui.QDialog.Accepted):
+                call = Call()
+                call.show()
         sys.exit(app.exec_())
     sys.exit(app.exec_())
 if __name__ == '__main__':

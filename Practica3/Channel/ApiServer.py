@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+from PyQt4 import QtGui
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
@@ -41,6 +44,12 @@ class MyApiServer:
         print "recive_message: " +msg
         conversation.append(msg)
         return conversation
+
+    def chat_window(self,msg):
+        self.Conv = QTextEdit(self)
+        self.Conv.setReadOnly(True)
+        self.Conv.append(msg)
+        return self.Conv
     """**************************************************
     Fucnion auxiliar
     **************************************************"""

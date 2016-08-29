@@ -9,9 +9,12 @@ from LoginWindow import *
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
 class Chat(QtGui.QDialog):
-    def __init__(self, parent=None, my_port = None,contact_port = None):
+    def __init__(self, parent=None, my_port = None,contact_port = None, ip = None):
         super(Chat, self).__init__(parent)
-        self.mc = Channel(my_port = int(my_port),contact_port = int(contact_port))
+        if ip == None:
+            self.mc = Channel(my_port = int(my_port),contact_port = int(contact_port))
+        else:
+            self.mc = Channel(ip, 5000, 5000)
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
