@@ -2,38 +2,12 @@ import Queue
 import pyaudio
 import wave
 import numpy
-
+import multiprocessing as mp
 class RecordAudio(object):
     """docstring for RecordAudio."""
+    frames = []
     def __init__(self):
         super(RecordAudio, self).__init__()
-        #self.arg = arg
-
-    def record(self):
-        CHUNK = 1024
-        FORMAT = pyaudio.paInt16
-        CHANNELS = 2
-        RATE = 44100
-        RECORD_SECONDS = 5
-        WAVE_OUTPUT_FILENAME = "output.wav"
-
-        p = pyaudio.PyAudio()
-
-        stream = p.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        input=True,
-                        frames_per_buffer=CHUNK)
-        print("* recording")
-
-        frames = []
-
-        for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-            data = stream.read(CHUNK)
-            frames.append(data)
-
-        print("* done recording")
-
 
     def feed_queue(self,q):
         CHUNK = 1024
@@ -58,3 +32,34 @@ class RecordAudio(object):
             q.put(data_ar)
             print("* done recording1")
         print("* done recording2")
+
+    def start_recording(self):
+        queue = mp.Queue()
+        #p = mp.Process(target=self.feed_queue(queue))
+        #p.start()
+        self.feed_queue(queue)
+
+    def playAudio(audio):
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        DELAY_SECONDS = 5
+        p = pyaudio.PyAudio()
+        FORMAT = p.get_format_from_width(2)
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        output=True,
+                        frames_per_buffer=CHUNK)
+
+        data = audio.data
+        stream.write(data)
+        stream.close()
+        p.terminate()
+    def reproduce():
+        while True:
+            if len(frames) > 0:
+                cv2.imshow('Servidor',frames.pop(0))
+                if cv2.waitKey(1) & 0xFF==ord('q'):
+                    break
+        cv2.destroyAllWindows()

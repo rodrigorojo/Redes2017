@@ -3,6 +3,8 @@
 import xmlrpclib
 import sys
 from Constants.Constants import *
+from threading import Thread
+from RecordAudio import *
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -27,3 +29,14 @@ class MyApiClient:
     def client_send_message(self, message):
         #print "cliente en host: "+str(self.host)+ " : "+str(self.contact_port)+"envio mensaje"
         return self.server.recive_message(str(message))
+
+    def client_make_call(self):
+        self.call_thread = Thread(target = RecordAudio().start_recording())
+        self.call_thread.daemon = True
+        self.call_thread.start()
+        proxy = xmlrpclib.ServerProxy(Constants().HTTP+ self.host +Constants().TWO_DOTS+str(self.contact_port),allow_none = False)
+        import numpy
+        while True:
+            d = queue.get()
+            data = xmlrpclib.Binary(d)
+            proxy.playAudio(data)

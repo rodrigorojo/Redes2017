@@ -45,10 +45,7 @@ class Chat(QtGui.QDialog):
 
     def call(self):
         self.accept()
-        Call()
-        queue = mp.Queue()
-        p = mp.Process(target=RecordAudio().feed_queue(queue))
-        p.start()
+        self.mc.client.client_make_call()
 
     """**************************************************
     Funcion que usa el boton buttonres para enviar el mensaje
