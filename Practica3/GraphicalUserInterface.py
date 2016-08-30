@@ -24,6 +24,7 @@ from GUI.CallWindow import Call
 from GUI.IPWindow import IPAdress
 #from GUI.ChatIPWindow import ChatIP
 from Constants.AuxiliarFunctions import get_ip_address
+#from RecordAudio import *
 # **************************************************
 #  Definicion de la funcion principal
 #**************************************************

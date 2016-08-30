@@ -9,7 +9,7 @@ from LoginWindow import *
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
 class Call(QtGui.QDialog):
-    def __init__(self, parent=None, my_port = None,contact_port = None):
+    def __init__(self, parent=None):
         super(Call, self).__init__(parent)
         #self.mc = Channel(Constants().EMPTY_STR, int(my_port), int(contact_port))
         self.Con = QLabel(self)

@@ -5,6 +5,9 @@ from Constants.Constants import *
 from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
 from LoginWindow import *
+from Channel.RecordAudio import *
+import multiprocessing as mp
+from GUI.CallWindow import *
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
@@ -42,7 +45,10 @@ class Chat(QtGui.QDialog):
 
     def call(self):
         self.accept()
-        return True
+        Call()
+        queue = mp.Queue()
+        p = mp.Process(target=RecordAudio().feed_queue(queue))
+        p.start()
 
     """**************************************************
     Funcion que usa el boton buttonres para enviar el mensaje
