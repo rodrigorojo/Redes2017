@@ -10,6 +10,8 @@ Fucnion para crear un cliente
 **************************************************"""
 class MyApiClient:
 
+    global end;
+    end = False;
     """**************************************************
     Constructor de la clase
     @param <str> host: El host al cual se conectara
@@ -36,7 +38,9 @@ class MyApiClient:
         self.call_thread.start()
         proxy = xmlrpclib.ServerProxy(Constants().HTTP+ self.host +Constants().TWO_DOTS+str(self.contact_port),allow_none = False)
         import numpy
-        while True:
+        while not end:
             d = queue.get()
             data = xmlrpclib.Binary(d)
             proxy.playAudio(data)
+    def client_end_call(self):
+        end = True;

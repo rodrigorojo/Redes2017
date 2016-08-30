@@ -32,6 +32,9 @@ class Chat(QtGui.QDialog):
         self.buttonCall = QPushButton("Llamar", self)
         self.buttonCall.clicked.connect(self.call)
 
+        self.buttonEndCall = QPushButton("Terminar", self)
+        self.buttonEndCall.clicked.connect(self.end_call)
+
         layout = QVBoxLayout(self)
         layout.addWidget(self.Con)
         layout.addWidget(self.Conv)
@@ -39,6 +42,7 @@ class Chat(QtGui.QDialog):
         layout2.addWidget(self.restext)
         layout2.addWidget(self.buttonres)
         layout2.addWidget(self.buttonCall)
+        layout2.addWidget(self.buttonEndCall)
         layout.addLayout(layout2)
 
         self.setWindowTitle(Constants().CHAT)
@@ -47,6 +51,8 @@ class Chat(QtGui.QDialog):
         self.accept()
         self.mc.client.client_make_call()
 
+    def end_call(self):
+        self.mc.client.client_end_call()
     """**************************************************
     Funcion que usa el boton buttonres para enviar el mensaje
     **************************************************"""
