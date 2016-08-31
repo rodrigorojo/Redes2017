@@ -6,6 +6,7 @@ from Constants.Constants import *
 from threading import Thread
 import multiprocessing as mp
 import pyaudio
+import numpy
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -61,19 +62,43 @@ class MyApiClient:
                         input=True,
                         frames_per_buffer=CHUNK)
         print("--------------Start recording--------------")
-        while True:
-            print("Recording...")
+        x = 1
+        print("Recording...")
+        while x<10:
+            print "Tienes: "+str(10-x)+" segundos para grabar mensaje"
             frame = []
             for i in range(0,int(RATE/CHUNK *RECORD_SECONDS)):
                 frame.append(stream.read(CHUNK))
             data_ar = numpy.fromstring(''.join(frame),  dtype=numpy.uint8)
             q.put(data_ar)
+            x+=1
             #print("* done recording1")
         print("Done recording")
 
     def send_audio(self, queue):
         import numpy
-        while True:
+        x=1
+        while x<10:
+            print "Mensaje termina en: "+str(10-x)+" segundos"
             d = queue.get()
             data = xmlrpclib.Binary(d)
-            self.server.playAudio(data)
+            self.playAudio(data)
+            x+=1
+
+    def playAudio(self, audio):
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        DELAY_SECONDS = 5
+        p = pyaudio.PyAudio()
+        FORMAT = p.get_format_from_width(2)
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        output=True,
+                        frames_per_buffer=CHUNK)
+
+        self.data1 = audio.data
+        stream.write(self.data1)
+        stream.close()
+        p.terminate()

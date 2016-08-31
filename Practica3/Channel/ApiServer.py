@@ -32,14 +32,6 @@ class MyApiServer:
         self.server.register_instance(self.functionWrapper)
         self.server.register_function(self.recive_message, Constants().RECIVE_MESSAGE_FUNC)
 
-        #self.call_thread = Thread(target = RecordAudio().playAudio())
-        #self.call_thread.daemon = True
-        #self.call_thread.start()
-
-        #self.playVThread = Thread(target=RecordAudio().manda_audio())
-        #self.playVThread.setDaemon(True)
-        #self.playVThread.start()
-
     def playAudio(self, audio):
         CHUNK = 1024
         CHANNELS = 1
