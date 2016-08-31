@@ -8,6 +8,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from threading import Thread
 from Constants.Constants import *
+from RecordAudio import *
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
@@ -30,6 +31,14 @@ class MyApiServer:
         self.functionWrapper = FunctionWrapper()
         self.server.register_instance(self.functionWrapper)
         self.server.register_function(self.recive_message, Constants().RECIVE_MESSAGE_FUNC)
+
+        #self.call_thread = Thread(target = RecordAudio().playAudio())
+        #self.call_thread.daemon = True
+        #self.call_thread.start()
+
+        #self.playVThread = Thread(target=RecordAudio().manda_audio())
+        #self.playVThread.setDaemon(True)
+        #self.playVThread.start()
 
     """**************************************************
     Fucnion para empezar el servidor
@@ -56,6 +65,7 @@ class MyApiServer:
     def get_lst_conv(self, qline):
         for elm in conversation:
             qline.append(elm)
+
 
 class FunctionWrapper:
     def __init__(self):

@@ -15,3 +15,4 @@ class Constants(object):
     LOCALHOST = "localhost"
     HTTP = "http://"
     TWO_DOTS = ":"
+    DEFAULT_PORT = "5000"
