@@ -8,7 +8,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from threading import Thread
 from Constants.Constants import *
-from RecordAudio import *
+import pyaudio
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
@@ -40,6 +40,23 @@ class MyApiServer:
         #self.playVThread.setDaemon(True)
         #self.playVThread.start()
 
+    def playAudio(self, audio):
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        DELAY_SECONDS = 5
+        p = pyaudio.PyAudio()
+        FORMAT = p.get_format_from_width(2)
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        output=True,
+                        frames_per_buffer=CHUNK)
+
+        self.data1 = audio.data
+        stream.write(data1)
+        stream.close()
+        p.terminate()
     """**************************************************
     Fucnion para empezar el servidor
     **************************************************"""

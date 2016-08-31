@@ -4,7 +4,8 @@ import xmlrpclib
 import sys
 from Constants.Constants import *
 from threading import Thread
-from RecordAudio import *
+import multiprocessing as mp
+import pyaudio
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -31,14 +32,48 @@ class MyApiClient:
         return self.server.recive_message(str(message))
 
     def client_make_call(self):
-        #print "idk_audio"
-        #RecordAudio().idk_audio(port=8001)
-        self.call_thread = Thread(target = RecordAudio().start_recording())
-        self.call_thread.daemon = True
-        self.call_thread.start()
-        #proxy = xmlrpclib.ServerProxy(Constants().HTTP+ self.host +Constants().TWO_DOTS+str(self.contact_port),allow_none = False)
-        #import numpy
-        #while True:
-        #    d = queue.get()
-        #    data = xmlrpclib.Binary(d)
-        #    proxy.playAudio(data)
+
+        self.queue = mp.Queue()
+
+        print "llego1"
+        self.call_queue = Thread(target = self.feed_queue(self.queue))
+        self.call_queue.daemon = True
+        self.call_queue.start()
+
+        print "llego2"
+        self.call_send_audio = Thread(target = self.send_audio(self.queue))
+        self.call_send_audio.daemon = True
+        self.call_send_audio.start()
+
+        print "llego3"
+
+    def feed_queue(self,q):
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        RECORD_SECONDS = 2
+        p = pyaudio.PyAudio()
+        FORMAT = p.get_format_from_width(2)
+
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=CHUNK)
+        print("--------------Start recording--------------")
+        while True:
+            print("Recording...")
+            frame = []
+            for i in range(0,int(RATE/CHUNK *RECORD_SECONDS)):
+                frame.append(stream.read(CHUNK))
+            data_ar = numpy.fromstring(''.join(frame),  dtype=numpy.uint8)
+            q.put(data_ar)
+            #print("* done recording1")
+        print("Done recording")
+
+    def send_audio(self, queue):
+        import numpy
+        while True:
+            d = queue.get()
+            data = xmlrpclib.Binary(d)
+            self.server.playAudio(data)
