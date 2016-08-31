@@ -16,3 +16,5 @@ class Constants(object):
     HTTP = "http://"
     TWO_DOTS = ":"
     DEFAULT_PORT = "5000"
+    LLAMADADV = "Llamada de voz"
+    LLAMADA = "Llamada"

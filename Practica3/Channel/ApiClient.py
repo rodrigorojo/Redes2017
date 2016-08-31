@@ -31,23 +31,24 @@ class MyApiClient:
     def client_send_message(self, message):
         #print "cliente en host: "+str(self.host)+ " : "+str(self.contact_port)+"envio mensaje"
         return self.server.recive_message(str(message))
-
+    """**************************************************
+    Funcion para crear una llamada
+    **************************************************"""
     def client_make_call(self):
 
         self.queue = mp.Queue()
 
-        print "llego1"
         self.call_queue = Thread(target = self.feed_queue(self.queue))
         self.call_queue.daemon = True
         self.call_queue.start()
 
-        print "llego2"
         self.call_send_audio = Thread(target = self.send_audio(self.queue))
         self.call_send_audio.daemon = True
         self.call_send_audio.start()
 
-        print "llego3"
-
+    """**************************************************
+    Funcion encolar mensaje
+    **************************************************"""
     def feed_queue(self,q):
         CHUNK = 1024
         CHANNELS = 1
@@ -75,6 +76,9 @@ class MyApiClient:
             #print("* done recording1")
         print("Done recording")
 
+    """**************************************************
+    Funcion para enviar
+    **************************************************"""
     def send_audio(self, queue):
         import numpy
         x=1
@@ -84,7 +88,9 @@ class MyApiClient:
             data = xmlrpclib.Binary(d)
             self.playAudio(data)
             x+=1
-
+    """**************************************************
+    Funcion para reproducir audio
+    **************************************************"""
     def playAudio(self, audio):
         CHUNK = 1024
         CHANNELS = 1

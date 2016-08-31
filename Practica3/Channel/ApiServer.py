@@ -32,6 +32,10 @@ class MyApiServer:
         self.server.register_instance(self.functionWrapper)
         self.server.register_function(self.recive_message, Constants().RECIVE_MESSAGE_FUNC)
 
+    """**************************************************
+    Reproduce el audio recibido
+    @param audio: EL audio que se va a reproducir
+    **************************************************"""
     def playAudio(self, audio):
         CHUNK = 1024
         CHANNELS = 1

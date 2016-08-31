@@ -31,8 +31,6 @@ class Chat(QtGui.QDialog):
         self.buttonCall = QPushButton("Llamar", self)
         self.buttonCall.clicked.connect(self.call)
 
-        #self.buttonGetCall = QPushButton("Recibir Audio", self)
-        #self.buttonGetCall.clicked.connect(self.get_call)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.Con)
@@ -41,7 +39,6 @@ class Chat(QtGui.QDialog):
         layout2.addWidget(self.restext)
         layout2.addWidget(self.buttonres)
         layout2.addWidget(self.buttonCall)
-        #layout2.addWidget(self.buttonGetCall)
         layout.addLayout(layout2)
 
         self.setWindowTitle(Constants().CHAT)
