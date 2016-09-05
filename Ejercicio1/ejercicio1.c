@@ -17,7 +17,7 @@
  #include <stdlib.h>
  #include <pcap.h>
  #include <arpa/inet.h>
- #include "ejemplo_pcap.h"
+ #include "ejercicio1.h"
 
 
 
@@ -91,6 +91,6 @@
 
     opcionUnPaquete();
     //Para varios paquetes :
-    //revisar: pcap_loop(captura,-1,callback, NULL);
+    pcap_loop(captura,-1,callback, NULL);
     return 0;
 }
