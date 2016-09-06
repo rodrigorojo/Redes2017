@@ -100,9 +100,15 @@
     int x;
     scanf("%d", &x);
     printf("Escogiste: %s \n", dl[x]);
+    pcap_t *handle;
+    handle = pcap_open_live(dl[x], BUFSIZ, 1, 1000, ebuf);
+
+    //pcap_loop(handle,-1,opcionUnPaquete, NULL);
+
+
     opcionUnPaquete(dl[x]);
 
+
     //Para varios paquetes :
-    //pcap_loop(captura,-1,callback, NULL);
     return 0;
 }
