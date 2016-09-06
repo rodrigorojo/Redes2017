@@ -10,7 +10,7 @@
   *Para instalar libpcap: apt-get install libpcap-dev
  *Para compilar el programa la linea de comandos corrrespondiente
  *es: gcc ejercicio1.c -o ej1 -lpcap
- *Y como super usuario se ejecuta ./lab
+ *Y como super usuario se ejecuta ./ej1
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
  #include <stdio.h>
@@ -19,16 +19,15 @@
  #include <arpa/inet.h>
  #include "ejercicio1.h"
 
-
-
  /**************************************************************
  *
  *@brief Funcion que será llamada si queremos capturar solo un
  *       paquete
  *
  ***************************************************************/
-
- int opcionUnPaquete (char *dev) {
+char *dev;
+pcap_t *handle;
+ int opcionUnPaquete () {
      //Obtenemos interfaz disponible
      char errbuf[PCAP_ERRBUF_SIZE];
      //char *dev;
@@ -37,17 +36,6 @@
      const u_char *paquete;
      struct pcap_pkthdr h;
 
-     printf("entro");
-
-     //dev = pcap_lookupdev(errbuf);
-     //Si el apuntador a dispositivo de red no es válido, no continuamos
-
-     if(dev ==NULL) {
-         printf("En dispositivo de red ERROR: %s\n", errbuf);
-         return EXIT_FAILURE;
-     }
-     //Imprimimos el dispositivo de red
-     printf("Capturaremos del dispositivo: %s \n", dev);
      //Abrimos la interfaz de red
      captura = pcap_open_live(dev,BUFSIZ,1,1000, errbuf);
      //Si la captura no fue exitosa salimos del programa
@@ -62,16 +50,19 @@
          printf("Al recibir un paquete ERROR: %s \n",errbuf);
          return EXIT_FAILURE;
      }
-     printf("Imprimimos el paquete\n");
+
+     ip = (struct ip_header*)(paquete + TAM_ETHERNET);
+     printf("\n----------------------------------------------------------\n" );
+     printf("El paquete lo envia: (%x )%s\n", ip -> ip_src, inet_ntoa(ip->ip_src), inet_ntoa(ip->ip_src));
+     printf("El paquete lo recibe: (%x)%s\n",((*ip).ip_dst),inet_ntoa(ip->ip_dst) );
+     printf("El paquete es:\n");
      int i;
      for(i = 0;i < h.len; i++) {
          printf("%x ", paquete[i]);
      }
      printf("\n");
-
-     ip = (struct ip_header*)(paquete + TAM_ETHERNET);
-     printf("(%x )%s -> (%x)%s \n",ip -> ip_src, inet_ntoa(ip->ip_src),((*ip).ip_dst),inet_ntoa(ip->ip_dst));
-     printf("Protocolo :%x", ip->ip_p);
+     //printf("De: (%x )%s -> (%x)%s \n",ip -> ip_src, inet_ntoa(ip->ip_src),((*ip).ip_dst),inet_ntoa(ip->ip_dst));
+     //printf("Protocolo :%x", ip->ip_p);
 
      return EXIT_SUCCESS;
  }
@@ -99,14 +90,15 @@
     printf("Ingresa el numero del dispositivo:\n");
     int x;
     scanf("%d", &x);
-    printf("Escogiste: %s \n", dl[x]);
-    pcap_t *handle;
-    handle = pcap_open_live(dl[x], BUFSIZ, 1, 1000, ebuf);
+    dev = dl[x];
+    printf("Se abre el dispositvo: %s\n",dev );
 
+    handle = pcap_open_live(dev, BUFSIZ, 1, 1000, ebuf);
     //pcap_loop(handle,-1,opcionUnPaquete, NULL);
-
-
-    opcionUnPaquete(dl[x]);
+    printf("\n/////////////////////////////////////////////////////////////\n");
+    while(x>0){
+      opcionUnPaquete();
+    }
 
 
     //Para varios paquetes :
