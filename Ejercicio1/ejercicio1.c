@@ -9,7 +9,7 @@
 /*++++++++++++++++Compilacion y uso +++++++++++++++++++++++++
   *Para instalar libpcap: apt-get install libpcap-dev
  *Para compilar el programa la linea de comandos corrrespondiente
- *es: gcc ejemplo_pcap.c -o lab -lpcap
+ *es: gcc ejercicio1.c -o ej1 -lpcap
  *Y como super usuario se ejecuta ./lab
  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
@@ -28,18 +28,20 @@
  *
  ***************************************************************/
 
- int opcionUnPaquete () {
+ int opcionUnPaquete (char *dev) {
      //Obtenemos interfaz disponible
      char errbuf[PCAP_ERRBUF_SIZE];
-     char *dev;
+     //char *dev;
      const struct ip_header *ip;
      pcap_t *captura;
      const u_char *paquete;
      struct pcap_pkthdr h;
 
+     printf("entro");
 
-     dev = pcap_lookupdev(errbuf);
+     //dev = pcap_lookupdev(errbuf);
      //Si el apuntador a dispositivo de red no es válido, no continuamos
+
      if(dev ==NULL) {
          printf("En dispositivo de red ERROR: %s\n", errbuf);
          return EXIT_FAILURE;
@@ -82,15 +84,25 @@
     char ebuf[PCAP_ERRBUF_SIZE];
     pcap_if_t* deviceList;
     pcap_if_t* d;
-
-    printf("%i \n",pcap_findalldevs(&deviceList,ebuf));
+    //char** devL =
+    int c = 1;
+    char* dl[9];
+    printf("Lista de dispositivos:\n" );
+    printf("|Numero | Nombre Dispositivo\n" );
+    pcap_findalldevs(&deviceList,ebuf);
     while(deviceList->next != NULL ) {
-        printf("%s \n",(deviceList->name));
+        dl[c] = deviceList->name;
+        printf("|   %d   |    %s \n",c,(deviceList->name));
         deviceList = deviceList->next;
+        c++;
     }
+    printf("Ingresa el numero del dispositivo:\n");
+    int x;
+    scanf("%d", &x);
+    printf("Escogiste: %s \n", dl[x]);
+    opcionUnPaquete(dl[x]);
 
-    opcionUnPaquete();
     //Para varios paquetes :
-    pcap_loop(captura,-1,callback, NULL);
+    //pcap_loop(captura,-1,callback, NULL);
     return 0;
 }
