@@ -8,7 +8,6 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from threading import Thread
 from Constants.Constants import *
-import pyaudio
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
