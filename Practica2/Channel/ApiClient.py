@@ -5,8 +5,7 @@ import sys
 from Constants.Constants import *
 from threading import Thread
 import multiprocessing as mp
-import pyaudio
-import numpy
+
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
