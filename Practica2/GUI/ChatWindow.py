@@ -6,7 +6,7 @@ from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
 from LoginWindow import *
 import multiprocessing as mp
-from GUI.CallWindow import *
+
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""

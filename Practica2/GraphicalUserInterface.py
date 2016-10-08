@@ -20,7 +20,6 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 from GUI.LoginWindow import Login
 from GUI.ChatWindow import Chat
-from GUI.CallWindow import Call
 from GUI.IPWindow import IPAdress
 
 from Constants.AuxiliarFunctions import get_ip_address
