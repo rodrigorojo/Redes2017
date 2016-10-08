@@ -8,17 +8,13 @@ import threading
 """**************************************************
 Clase para crear una ventana de login
 **************************************************"""
-class Login(QtGui.QDialog):
+class IPAdress(QtGui.QDialog):
     def __init__(self, parent=None):
-        super(Login, self).__init__(parent)
+        super(IPAdress, self).__init__(parent)
 
         self.P1 = QLabel(self)
-        self.P1.setText(Constants().INFOPORT1)
+        self.P1.setText("Ingresar IP")
         self.textP1 = QLineEdit(self)
-
-        self.P2 = QLabel(self)
-        self.P2.setText(Constants().INFOPORT2)
-        self.textP2 = QLineEdit(self)
 
         self.buttonLogin = QPushButton(Constants().ACC, self)
         self.buttonLogin.clicked.connect(self.button_login)
@@ -26,24 +22,17 @@ class Login(QtGui.QDialog):
         layout = QVBoxLayout(self)
         layout.addWidget(self.P1)
         layout.addWidget(self.textP1)
-        layout.addWidget(self.P2)
-        layout.addWidget(self.textP2)
         layout.addWidget(self.buttonLogin)
 
-        self.setWindowTitle(Constants().INFO)
+
+        self.setWindowTitle("Ingresar IP")
     """**************************************************
     Funcion que usa el boton buttonLogin entrar
     **************************************************"""
     def button_login(self):
-        print int(str(self.textP1.text()))
+        #print "el ip ingresado es: "+str(self.textP1.text()))
         self.accept()
-        self.regresa_str()
-        #return c
-    """**************************************************
-    Funcion auxiliar
-    **************************************************"""
-    def regresa_str(self):
-        tmp = []
-        tmp.append((str(self.textP1.text())))
-        tmp.append((str(self.textP2.text())))
-        return tmp
+        #return str(self.textP1.text()))
+
+    def regresa_contact_ip(self):
+        return str(self.textP1.text())
