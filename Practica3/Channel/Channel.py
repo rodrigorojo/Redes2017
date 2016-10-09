@@ -46,11 +46,3 @@ class Channel:
             api_server_thread.daemon = True
             api_server_thread.start()
             self.client = MyApiClient(self.contact_ip, 5000)
-
-
-    """**************************************************
-    Metodo que se encarga de mandar texto al contacto con
-    el cual se estableció la conexion
-    **************************************************"""
-    def send_text(self, text):
-        return c.client_send_message(text);

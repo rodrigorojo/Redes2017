@@ -4,13 +4,13 @@ import xmlrpclib
 import sys
 from Constants.Constants import *
 from threading import Thread
-import multiprocessing as mp
-import pyaudio
+from multiprocessing import Queue
 import numpy
+import pyaudio
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
-class MyApiClient:
+class MyApiClient():
 
     """**************************************************
     Constructor de la clase
@@ -20,6 +20,7 @@ class MyApiClient:
     def __init__(self, host = None, contact_port = None):
         self.contact_port = contact_port
         self.host = host
+        self.estaLlamando = False
         if contact_port and host:
             #print "Nuevo Cliente en puerto: "+ str(contact_port)
             self.server = xmlrpclib.ServerProxy(Constants().HTTP+ host +Constants().TWO_DOTS+str(contact_port), allow_none = True)
@@ -28,83 +29,56 @@ class MyApiClient:
     Funcion para enviar mensajes
     @param <str> message: El mensaje que enviara
     **************************************************"""
-    def client_send_message(self, message):
+    def client_send_message(self, mensaje):
         #print "cliente en host: "+str(self.host)+ " : "+str(self.contact_port)+"envio mensaje"
-        return self.server.recive_message(str(message))
-    """**************************************************
-    Funcion para crear una llamada
-    **************************************************"""
-    def client_make_call(self):
-
-        self.queue = mp.Queue()
-
-        self.call_queue = Thread(target = self.feed_queue(self.queue))
-        self.call_queue.daemon = True
-        self.call_queue.start()
-
-        self.call_send_audio = Thread(target = self.send_audio(self.queue))
-        self.call_send_audio.daemon = True
-        self.call_send_audio.start()
+        print "El mensaje que se enviara es: " + str(mensaje)
+        #interfaz.insertPlainText("YO: " + str(mensaje) +"\n")
+        return self.server.recibe_mensaje(str(mensaje))
 
     """**************************************************
-    Funcion encolar mensaje
+    Funcion que hace que la llamada pare
     **************************************************"""
-    def feed_queue(self,q):
-        CHUNK = 1024
-        CHANNELS = 1
-        RATE = 44100
-        RECORD_SECONDS = 2
-        p = pyaudio.PyAudio()
-        FORMAT = p.get_format_from_width(2)
-
-        stream = p.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        input=True,
-                        frames_per_buffer=CHUNK)
-        print("--------------Start recording--------------")
-        x = 1
-        print("Recording...")
-        while x<10:
-            print "Tienes: "+str(10-x)+" segundos para grabar mensaje"
-            frame = []
-            for i in range(0,int(RATE/CHUNK *RECORD_SECONDS)):
-                frame.append(stream.read(CHUNK))
-            data_ar = numpy.fromstring(''.join(frame),  dtype=numpy.uint8)
-            q.put(data_ar)
-            x+=1
-            #print("* done recording1")
-        print("Done recording")
-
+    def stop_llamada(self):
+        self.estaLlamando = False
+        print "La llamada termino"
     """**************************************************
-    Funcion para enviar
+    Funcion que pone la llamada en un hilo
     **************************************************"""
-    def send_audio(self, queue):
+    def llamada_en_thread(self):
+        self.thread1 = Thread(target=self.client_record_and_send_audio)
+        self.thread1.daemon = True
+        self.thread1.start()
+    """**************************************************
+    Funcion que graba y encia el audio al contacto
+    **************************************************"""
+    def client_record_and_send_audio(self):
+        print "El cliente enviara audio..."
+        self.queue = Queue()
+        self.thread_llamada = Thread(target=self.feed_queue, args=(self.queue,))
+        self.thread_llamada.daemon = True
+        self.thread_llamada.start();
+
         import numpy
-        x=1
-        while x<10:
-            print "Mensaje termina en: "+str(10-x)+" segundos"
-            d = queue.get()
-            data = xmlrpclib.Binary(d)
-            self.playAudio(data)
-            x+=1
-    """**************************************************
-    Funcion para reproducir audio
-    **************************************************"""
-    def playAudio(self, audio):
-        CHUNK = 1024
-        CHANNELS = 1
-        RATE = 44100
-        DELAY_SECONDS = 5
-        p = pyaudio.PyAudio()
-        FORMAT = p.get_format_from_width(2)
-        stream = p.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        output=True,
-                        frames_per_buffer=CHUNK)
+        while self.estaLlamando:
+            print self.queue.get()
+            d = self.queue.get()
+            self.server.recibe_audio(xmlrpclib.Binary(d))
 
-        self.data1 = audio.data
-        stream.write(self.data1)
-        stream.close()
-        p.terminate()
+    """**************************************************
+    Funcion que va guradando el audio
+    **************************************************"""
+    def feed_queue(self, q):
+        self.p = pyaudio.PyAudio()
+        self.FORMAT = self.p.get_format_from_width(2)
+
+        self.stream = self.p.open(format=self.FORMAT,
+                        channels=Constants().CHANNELS,
+                        rate=Constants().RATE,
+                        input=True,
+                        frames_per_buffer=Constants().CHUNK)
+        while self.estaLlamando:
+            frame = []
+            for i in range(0,int(Constants().RATE/Constants().CHUNK * Constants().RECORD_SECONDS)):
+                frame.append(self.stream.read(Constants().CHUNK))
+            self.data_ar = numpy.fromstring(''.join(frame),  dtype=numpy.uint8)
+            q.put(self.data_ar)

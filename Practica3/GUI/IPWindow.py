@@ -16,8 +16,6 @@ class IPAdress(QtGui.QDialog):
         self.P1.setText("Ingresar IP")
         self.textP1 = QLineEdit(self)
 
-
-
         self.buttonLogin = QPushButton(Constants().ACC, self)
         self.buttonLogin.clicked.connect(self.button_login)
 
