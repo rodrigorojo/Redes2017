@@ -4,14 +4,14 @@ from PyQt4.QtGui import *
 import multiprocessing as mp
 from Channel.RecordAudio import *
 
-class CallWindow(QtGui.QDialog):
+class VideocallWindow(QtGui.QDialog):
     def __init__(self, canal):
-        super(CallWindow, self).__init__()
+        super(VideocallWindow, self).__init__()
         self.mc = canal
-        self.buttonStart = QPushButton("Empezar llamada", self)
+        self.buttonStart = QPushButton("Empezar Videollamada", self)
         self.buttonStart.clicked.connect(self.llamar)
 
-        self.buttonStop = QPushButton("Terminar Llamada", self)
+        self.buttonStop = QPushButton("Terminar Videollamada", self)
         self.buttonStop.clicked.connect(self.colgar)
 
         layout = QVBoxLayout(self)
@@ -20,13 +20,13 @@ class CallWindow(QtGui.QDialog):
         layout2.addWidget(self.buttonStop)
         layout.addLayout(layout2)
 
-        self.setWindowTitle("Llamada")
+        self.setWindowTitle("Videollamada")
 
     def llamar(self):
         print "Empezar el hilo y grabar"
-        self.mc.client.estaLlamando = True;
-        self.mc.client.llamada_en_thread()
+        self.mc.client.estaVideollamando = True;
+        self.mc.client.videollamada_en_thread()
 
     def colgar(self):
-        self.mc.client.stop_llamada();
-        #print "oprimio boton Terminar Llamada"
+        self.mc.client.stop_videollamada();
+        print "oprimio boton Terminar Llamada"

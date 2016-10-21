@@ -31,6 +31,7 @@ class MyApiServer(QtGui.QDialog):
         self.server.register_instance(self.functionWrapper)
         self.server.register_function(self.recibe_mensaje, Constants().RECIBE_MENSAJE_FUNC)
         self.server.register_function(self.recibe_audio, "recibe_audio")
+        self.server.register_function(self.recibe_video, "recibe_video")
 
     """**************************************************
     Funcion para empezar el servidor
@@ -39,11 +40,22 @@ class MyApiServer(QtGui.QDialog):
         self.server.serve_forever()
     """**************************************************
     Funcion que recibe un mensaje y lo agrega a la lista de mensajes
-    @param <str> msg: mensaje que recive
+    @param <str> msg: mensaje que recibe
     **************************************************"""
     def recibe_mensaje(self, mensaje):
         #print "recibe____mensaje: Contacto:::" + mensaje
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
+    """**************************************************
+    Funcion que recibe el video y se lo pasa a otra
+    **************************************************"""
+    def recibe_video(self,video):
+        print "El video se recibio en servidor "
+        self.reproduce_video(video)
+    """**************************************************
+    Funcion que reproduce el video recibido
+    **************************************************"""
+    def reproduce_video(self, video):
+        print "reproduciendo video..."
     """**************************************************
     Funcion que recibe el audio y se lo pasa a otra
     **************************************************"""
@@ -51,7 +63,7 @@ class MyApiServer(QtGui.QDialog):
         print "El audio se recibio en servidor "
         self.reproduce(audio)
     """**************************************************
-    Funcion que recibe reproduce el audio recibido
+    Funcion que reproduce el audio recibido
     **************************************************"""
     def reproduce(self, audio):
         print "reproduciendo..."
