@@ -9,8 +9,11 @@ import sys
 from Constants.Constants import *
 import GUI.VideocallCameraWindow as vccw
 import pyaudio
-
+import cv2
 import cv
+import numpy
+import cStringIO
+from threading import Thread
 from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
 """**************************************************
@@ -25,6 +28,7 @@ class MyApiServer(QtGui.QDialog):
         super(MyApiServer, self).__init__(None)
         self.conversacion = QTextEdit(self)
         self.my_port = my_port
+        self.frames = []
         if(ip == None):
             self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
         else:
@@ -53,22 +57,36 @@ class MyApiServer(QtGui.QDialog):
     """**************************************************
     Funcion que recibe el video y se lo pasa a otra
     **************************************************"""
-    def recibe_video(self,video):
+    def recibe_video(self,data,estaVideollamando):
         print "El video se recibio en servidor "
-        self.reproduce_video(video)
-    """**************************************************
-    Funcion que reproduce el video recibido
-    **************************************************"""
-    def reproduce_video(self,video):
-        print "reproduciendo video..."
+        self.thread = Thread(target=self.reproduce_video,args=(data,estaVideollamando,))
+        self.thread.daemon = True
+        self.thread.start()
 
-
-
+    def reproduce_video(self,data,estaVideollamando):
+        print "rep_vid1"
+        self.append_frames(data)
+        while estaVideollamando:
+            print "rep_vid2"
+            if len(self.frames) > 0:
+                print "rep_vid3"
+                cv2.imshow('Servidor',self.frames.pop(0))
+                if cv2.waitKey(1) & 0xFF==ord('q'):
+                    print "rep_vid4"
+                    break
+        self.cv2.destroyAllWindows()
 
         #self.thread1 = Thread(target=self.widget.show())
         #self.thread1.daemon = True
         #self.thread1.start()
 
+    def toArray(self,s):
+        self.f = cStringIO.StringIO(s)
+        self.arr = numpy.lib.format.read_array(self.f)
+        return self.arr
+
+    def append_frames(self,video):
+        self.frames.append(self.toArray(video.data))
 
     """**************************************************
     Funcion que recibe el audio y se lo pasa a otra

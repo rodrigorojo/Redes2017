@@ -58,17 +58,16 @@ class MyApiClient():
     def client_record_and_send_video(self):
         print "El cliente enviara audio..."
         self.queue = Queue()
-        self.thread1 = Thread(target=self.graba,args=(self.queue,))
+        self.thread1 = Thread(target=self.grabar_video,args=(self.queue,))
         self.thread1.daemon = True
         self.thread1.start()
 
     def toString(self,data):
-        #print "entro a toString"
-        self.f = StringIO()
-        #numpy.lib.format.write_array(self.f,data)
-        return self.f.getvalue()
+        self.x = StringIO()
+        numpy.lib.format.write_array(self.x,data)
+        return self.x.getvalue()
 
-    def graba(self,q):
+    def grabar_video(self,q):
         print"entro a grabar"
         self.cap = cv2.VideoCapture(0)
         while self.estaVideollamando:
@@ -77,7 +76,7 @@ class MyApiClient():
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
             self.data = xmlrpclib.Binary(self.toString(self.frame))
-            self.server.recibe_video(self.data)
+            self.server.recibe_video(self.data,self.estaVideollamando)
         self.cap.release()
         cv2.destroyAllWindows()
 
