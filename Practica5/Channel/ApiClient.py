@@ -27,8 +27,8 @@ class MyApiClient():
         self.estaVideollamando = False
         if contact_port and host:
             #print "Nuevo Cliente en puerto: "+ str(contact_port)
-            self.server = xmlrpclib.ServerProxy(Constants().HTTP+ host +Constants().TWO_DOTS+str(contact_port), allow_none = True)
-            print "cliente en: "+Constants().HTTP+ host +Constants().TWO_DOTS+str(contact_port)
+            self.server = xmlrpclib.ServerProxy(HTTP+ host +TWO_DOTS+str(contact_port), allow_none = True)
+            print "cliente en: "+HTTP+ host +TWO_DOTS+str(contact_port)
     """**************************************************
     Funcion para enviar mensajes
     @param <str> message: El mensaje que enviara
@@ -76,7 +76,7 @@ class MyApiClient():
         self.cap = cv2.VideoCapture(0)
         while self.estaVideollamando:
             self.ret, self.frame = self.cap.read()
-            cv2.imshow(Constants().CLIENTE,self.frame)
+            cv2.imshow(CLIENTE,self.frame)
             self.data = xmlrpclib.Binary(self.toString(self.frame))
             self.server.recibe_video(self.data)
         self.cap.release()
@@ -119,13 +119,13 @@ class MyApiClient():
         self.FORMAT = self.p.get_format_from_width(2)
 
         self.stream = self.p.open(format=self.FORMAT,
-                        channels=Constants().CHANNELS,
-                        rate=Constants().RATE,
+                        channels=CHANNELS,
+                        rate=RATE,
                         input=True,
-                        frames_per_buffer=Constants().CHUNK)
+                        frames_per_buffer=CHUNK)
         while self.estaLlamando:
             frame = []
-            for i in range(0,int(Constants().RATE/Constants().CHUNK * Constants().RECORD_SECONDS)):
-                frame.append(self.stream.read(Constants().CHUNK))
+            for i in range(0,int(RATE/CHUNK * RECORD_SECONDS)):
+                frame.append(self.stream.read(CHUNK))
             self.data_ar = numpy.fromstring(''.join(frame),  dtype=numpy.uint8)
             q.put(self.data_ar)

@@ -2,7 +2,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import multiprocessing as mp
-from Channel.RecordAudio import *
 
 class CallWindow(QtGui.QDialog):
     def __init__(self, canal):

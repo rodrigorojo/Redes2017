@@ -2,7 +2,6 @@ from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import multiprocessing as mp
-from Channel.RecordAudio import *
 
 class VideocallWindow(QtGui.QDialog):
     def __init__(self, canal):
@@ -31,7 +30,5 @@ class VideocallWindow(QtGui.QDialog):
 
     def colgar(self):
         self.mc.client.stop_videollamada();
-        print "--------------antes----------->"+str(self.mc.server.leEstanVideollamando)
         self.mc.server.leEstanVideollamando = False
-        print "------------------------------>"+str(self.mc.server.leEstanVideollamando)
         print "oprimio boton Terminar Llamada"

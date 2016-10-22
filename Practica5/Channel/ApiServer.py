@@ -1,10 +1,26 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+
+
+#####################################################
+# PURPOSE: Clase que permite mandar un mensaje al   #
+#           contacto                                #
+#                                                   #
+# Vilchis Dominguez Miguel Alonso                   #
+#       <mvilchis@ciencias.unam.mx>                 #
+#                                                   #
+# Notes:                                            #
+#                                                   #
+# Copyright   17-08-2015                            #
+#                                                   #
+# Distributed under terms of the MIT license.       #
+#####################################################
+from SimpleXMLRPCServer import SimpleXMLRPCServer
+from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 from PyQt4 import QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import xmlrpclib
-from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from Constants.Constants import *
 import GUI.VideocallCameraWindow as vccw
@@ -16,6 +32,14 @@ import cStringIO
 from threading import Thread
 from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
+#           Mis bibliotecas
+import sys
+from Constants.AuxiliarFunctions import *
+from Constants import *
+
+# Restrict to a particular path.
+class RequestHandler(SimpleXMLRPCRequestHandler):
+    rpc_paths = ('/RPC2',)
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
@@ -31,7 +55,7 @@ class MyApiServer(QtGui.QDialog):
         self.frames = []
         self.leEstanVideollamando = True
         if(ip == None):
-            self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
+            self.server = SimpleXMLRPCServer((LOCALHOST, int(my_port)), allow_none = True)
         else:
             self.server = SimpleXMLRPCServer((ip, int(my_port)), allow_none = True)
             print "servidor en ip: " +ip+" : "+ str(int(my_port))
@@ -39,7 +63,7 @@ class MyApiServer(QtGui.QDialog):
         self.server.register_multicall_functions()
         self.functionWrapper = FunctionWrapper()
         self.server.register_instance(self.functionWrapper)
-        self.server.register_function(self.recibe_mensaje, Constants().RECIBE_MENSAJE_FUNC)
+        self.server.register_function(self.recibe_mensaje, RECIBE_MENSAJE_FUNC)
         self.server.register_function(self.recibe_audio, "recibe_audio")
         self.server.register_function(self.recibe_video, "recibe_video")
 
@@ -74,7 +98,7 @@ class MyApiServer(QtGui.QDialog):
             print self.leEstanVideollamando
             if len(self.frames) > 0:
                 print "|"
-                cv2.imshow(Constants().SERVIDOR,self.frames.pop(0))
+                cv2.imshow(SERVIDOR,self.frames.pop(0))
         print self.leEstanVideollamando
         cv2.destroyAllWindows()
     """**************************************************
@@ -123,7 +147,7 @@ class MyApiServer(QtGui.QDialog):
 
 class FunctionWrapper:
     def __init__(self):
-        print Constants().EMPTY_STR
+        print EMPTY_STR
 
     """ **************************************************
     Procedimiento que ofrece nuestro servidor, este metodo sera llamado
