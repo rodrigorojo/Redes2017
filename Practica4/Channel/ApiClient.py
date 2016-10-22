@@ -76,7 +76,7 @@ class MyApiClient():
         self.cap = cv2.VideoCapture(0)
         while self.estaVideollamando:
             self.ret, self.frame = self.cap.read()
-            cv2.imshow('Cliente',self.frame)
+            cv2.imshow(Constants().CLIENTE,self.frame)
             self.data = xmlrpclib.Binary(self.toString(self.frame))
             self.server.recibe_video(self.data)
         self.cap.release()

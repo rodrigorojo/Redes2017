@@ -71,10 +71,10 @@ class MyApiServer(QtGui.QDialog):
         self.append_frames(data)
         #print self.leEstanVideollamando
         while self.leEstanVideollamando:
-            print str(self.leEstanVideollamando)+"what"
+            print self.leEstanVideollamando
             if len(self.frames) > 0:
                 print "|"
-                cv2.imshow('Servidor',self.frames.pop(0))
+                cv2.imshow(Constants().SERVIDOR,self.frames.pop(0))
         print self.leEstanVideollamando
         cv2.destroyAllWindows()
     """**************************************************
