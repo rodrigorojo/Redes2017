@@ -29,6 +29,7 @@ class MyApiServer(QtGui.QDialog):
         self.conversacion = QTextEdit(self)
         self.my_port = my_port
         self.frames = []
+        self.leEstanVideollamando = True
         if(ip == None):
             self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
         else:
@@ -54,37 +55,38 @@ class MyApiServer(QtGui.QDialog):
     def recibe_mensaje(self, mensaje):
         #print "recibe____mensaje: Contacto:::" + mensaje
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
+
     """**************************************************
     Funcion que recibe el video y se lo pasa a otra
     **************************************************"""
-    def recibe_video(self,data,estaVideollamando):
+    def recibe_video(self,data):
         print "El video se recibio en servidor "
-        self.thread = Thread(target=self.reproduce_video,args=(data,estaVideollamando,))
+        self.thread = Thread(target=self.reproduce_video,args=(data,))
         self.thread.daemon = True
         self.thread.start()
-
-    def reproduce_video(self,data,estaVideollamando):
-        print "rep_vid1"
+    """**************************************************
+    Funcion que reproduce el video
+    **************************************************"""
+    def reproduce_video(self,data):
         self.append_frames(data)
-        while estaVideollamando:
-            print "rep_vid2"
+        #print self.leEstanVideollamando
+        while self.leEstanVideollamando:
+            print str(self.leEstanVideollamando)+"what"
             if len(self.frames) > 0:
-                print "rep_vid3"
+                print "|"
                 cv2.imshow('Servidor',self.frames.pop(0))
-                if cv2.waitKey(1) & 0xFF==ord('q'):
-                    print "rep_vid4"
-                    break
-        self.cv2.destroyAllWindows()
-
-        #self.thread1 = Thread(target=self.widget.show())
-        #self.thread1.daemon = True
-        #self.thread1.start()
-
+        print self.leEstanVideollamando
+        cv2.destroyAllWindows()
+    """**************************************************
+    Funcion auxiliar
+    **************************************************"""
     def toArray(self,s):
         self.f = cStringIO.StringIO(s)
         self.arr = numpy.lib.format.read_array(self.f)
         return self.arr
-
+    """**************************************************
+    Funcion que auxiliar
+    **************************************************"""
     def append_frames(self,video):
         self.frames.append(self.toArray(video.data))
 

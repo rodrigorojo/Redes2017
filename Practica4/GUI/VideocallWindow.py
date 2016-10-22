@@ -24,9 +24,14 @@ class VideocallWindow(QtGui.QDialog):
 
     def llamar(self):
         print "Empezar el hilo y grabar"
-        self.mc.client.estaVideollamando = True;
+        self.mc.client.estaVideollamando = True
+        self.mc.server.leEstanVideollamando = True
         self.mc.client.videollamada_en_thread()
+
 
     def colgar(self):
         self.mc.client.stop_videollamada();
+        print "--------------antes----------->"+str(self.mc.server.leEstanVideollamando)
+        self.mc.server.leEstanVideollamando = False
+        print "------------------------------>"+str(self.mc.server.leEstanVideollamando)
         print "oprimio boton Terminar Llamada"
