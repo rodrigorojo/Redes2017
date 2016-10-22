@@ -7,6 +7,9 @@ from threading import Thread
 from multiprocessing import Queue
 import numpy
 import pyaudio
+import cv2
+import time
+from cStringIO import StringIO
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -46,7 +49,7 @@ class MyApiClient():
     Funcion que pone la videollamada en un hilo
     **************************************************"""
     def videollamada_en_thread(self):
-        self.thread1 = Thread(target=self.client_record_and_send_video)
+        self.thread1 = Thread(target=self.client_record_and_send_video())
         self.thread1.daemon = True
         self.thread1.start()
     """**************************************************
@@ -54,7 +57,30 @@ class MyApiClient():
     **************************************************"""
     def client_record_and_send_video(self):
         print "El cliente enviara audio..."
-        self.server.recibe_video(None)
+        self.queue = Queue()
+        self.thread1 = Thread(target=self.graba,args=(self.queue,))
+        self.thread1.daemon = True
+        self.thread1.start()
+
+    def toString(self,data):
+        #print "entro a toString"
+        self.f = StringIO()
+        #numpy.lib.format.write_array(self.f,data)
+        return self.f.getvalue()
+
+    def graba(self,q):
+        print"entro a grabar"
+        self.cap = cv2.VideoCapture(0)
+        while self.estaVideollamando:
+            self.ret, self.frame = self.cap.read()
+            cv2.imshow('Cliente',self.frame)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            self.data = xmlrpclib.Binary(self.toString(self.frame))
+            self.server.recibe_video(self.data)
+        self.cap.release()
+        cv2.destroyAllWindows()
+
     """**************************************************
     Funcion que hace que la llamada termine
     **************************************************"""

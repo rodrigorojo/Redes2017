@@ -7,7 +7,12 @@ import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from Constants.Constants import *
+import GUI.VideocallCameraWindow as vccw
 import pyaudio
+
+import cv
+from PyQt4.QtCore import QPoint, QTimer
+from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
@@ -54,8 +59,17 @@ class MyApiServer(QtGui.QDialog):
     """**************************************************
     Funcion que reproduce el video recibido
     **************************************************"""
-    def reproduce_video(self, video):
+    def reproduce_video(self,video):
         print "reproduciendo video..."
+
+
+
+
+        #self.thread1 = Thread(target=self.widget.show())
+        #self.thread1.daemon = True
+        #self.thread1.start()
+
+
     """**************************************************
     Funcion que recibe el audio y se lo pasa a otra
     **************************************************"""
