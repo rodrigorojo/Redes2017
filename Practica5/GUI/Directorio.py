@@ -53,7 +53,7 @@ class Directorio(QtGui.QDialog):
     def actualizar_contactos(self):
         if(not self.adios):
             self.muestraDirectorio.clear()
-            for key in self.contacts.keys():
+            for key in self.directory_client.get_contacts_wrapper(self.username).keys():
                 self.muestraDirectorio.addItem('Contacto: '+str(key))
 
     def desconectar_contacto(self):

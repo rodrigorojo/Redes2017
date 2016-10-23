@@ -67,9 +67,12 @@ class FunctionWrapperDirectory:
     Metodo que regresa los contactos activos en el directorio excluyendo el contacto actual.
     ************************************************** """
     def get_contacts_wrapper(self, username):
+        temp0 = {}
         for key in self.client_dictionary.keys():
             if(username != key):
                 temp0[key] = self.client_dictionary[key]
+        print "get:"
+        print temp0
         return temp0
 
     """ **************************************************
@@ -77,8 +80,6 @@ class FunctionWrapperDirectory:
     ************************************************** """
     def connect_wrapper(self, ip_string, port_string, username):
         self.client_dictionary[str(username)] = {'NAME_CONTACT': username, 'IP_CONTACT':ip_string, 'PORT_CONTACT':port_string}
-        print "...___..."
-        print self.client_dictionary
     """ **************************************************
     Metodo que elimina al cliente de los usuarios activos.
     ************************************************** """
@@ -91,12 +92,6 @@ class FunctionWrapperDirectory:
     Metodo que elimina al cliente de los usuarios activos, por nombre de usuario.
     ************************************************** """
     def disconnect_wrapper_username(self, username):
-        print self.client_dictionary
-        if(str(username) in self.client_dictionary.keys()):
-            print "sisisisisisisisisisisiis"
-        else:
-            print "nononooonnonononononononon"
-
         del self.client_dictionary[str(username)]
 # **************************************************
 #  Definicion de la funcion principal
