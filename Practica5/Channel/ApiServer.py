@@ -69,6 +69,7 @@ class MyApiServer(QtGui.QDialog):
         self.server.register_function(self.recibe_mensaje, RECIBE_MENSAJE_FUNC)
         self.server.register_function(self.recibe_audio, "recibe_audio")
         self.server.register_function(self.recibe_video, "recibe_video")
+        self.server.register_function(self.recibe_video, "recibe_ventana")
         #self.chatWindowServer = Chat(server = self.server)
 
 
@@ -81,9 +82,16 @@ class MyApiServer(QtGui.QDialog):
     Funcion que recibe un mensaje y lo agrega a la lista de mensajes
     @param <str> msg: mensaje que recibe
     **************************************************"""
-    def recibe_mensaje(self, mensaje):
+    def recibe_mensaje(self, mensaje, server):
         print "recibe____mensaje: Contacto:::" + mensaje
+        if(self.primeraVez):
+            self.cws = Chat(server = server)
+            self.cws.show()
+            self.primeraVez = False
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
+
+    def recibe_ventana(self, ventana):
+        ventana.show()
 
     """**************************************************
     Funcion que recibe el video y se lo pasa a otra

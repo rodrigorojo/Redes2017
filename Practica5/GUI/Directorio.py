@@ -10,7 +10,7 @@ import multiprocessing as mp
 from CallWindow import *
 from ChatWindow import *
 ######
-from VideocallWindow import *
+#from VideocallWindow import Chat
 
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal

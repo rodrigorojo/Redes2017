@@ -9,6 +9,7 @@ import numpy
 import pyaudio
 import cv2
 import time
+from GUI.ChatWindow import *
 from cStringIO import StringIO
 """**************************************************
 Fucnion para crear un cliente
@@ -37,9 +38,7 @@ class MyApiClient():
         #print "cliente en host: "+str(self.host)+ " : "+str(self.contact_port)+"envio mensaje"
         print "El mensaje que se enviara es: " + str(mensaje)
         #interfaz.insertPlainText("YO: " + str(mensaje) +"\n")
-        return self.server.recibe_mensaje(str(mensaje))
-
-
+        return self.server.recibe_mensaje(str(mensaje),self.server)
 
     """**************************************************
     Funcion que hace que la videollamada termine
