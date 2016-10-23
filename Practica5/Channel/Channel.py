@@ -100,15 +100,23 @@ class RequestChannel():
 
 class BidirectionalChannel(RequestChannel):
     def __init__(self, Qparent, contact_ip = None,  contact_port = None,my_port = None):
-        if my_port and contact_port:
-            #El objeto api server necesita correr en un hilo aparte
-            #TODO
-            print ""
-        elif contact_ip:
-            #TODO
-            print ""
+        self.contact_ip = contact_ip
+        self.my_port = my_port
+        self.contact_port = contact_port
+
+        if( contact_ip == None):
+            self.server = MyApiServer(my_port = self.my_port)
+            api_server_thread = Thread(target = self.server.init_server)
+            api_server_thread.daemon=True
+            api_server_thread.start()
+            self.client = MyApiClient(LOCALHOST, contact_port = self.contact_port)
         else:
-            raise ValueError('The values of fields are not consistent BidirectionalChannel.__init__')
+            self.server = MyApiServer(ip = get_ip_address(), my_port= 5000)
+            api_server_thread = Thread(target = self.server.init_server)
+            api_server_thread.daemon = True
+            api_server_thread.start()
+            self.client = MyApiClient(self.contact_ip, 5000)
+
         #TODO
     """**************************************************
     Metodos Get

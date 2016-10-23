@@ -43,8 +43,8 @@ FIRST_ITEM = 0
 SECOND_ITEM = 1
 
 INFO = "Informacion"
-INFOPORT1 = "Cual es mi puerto?:"
-INFOPORT2 = "Cual es el puerto del contacto?:"
+INFOPORT1 = "Ingresa tu puerto"
+INFOPORT2 = "Ingresa puerto del Servidor de Contactos"
 ACC = "Acceder"
 CHAT = "Chat"
 CONV = "Conversacion"

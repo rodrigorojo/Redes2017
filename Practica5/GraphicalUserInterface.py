@@ -22,6 +22,7 @@ from GUI.LoginWindow import Login
 from GUI.ChatWindow import Chat
 from GUI.IPWindow import IPAdress
 from Constants.AuxiliarFunctions import get_ip_address
+from GUI.Directorio import Directorio
 
 # **************************************************
 #  Definicion de la funcion principal
@@ -43,8 +44,10 @@ def main(argv):
         login = Login()
         if login.exec_() == QtGui.QDialog.Accepted:
             lst = login.regresa_str()
-            chat = Chat(my_port = lst[1],contact_port = lst[0])
-            chat.show()
+            directorio = Directorio(my_port = lst[1],server_contactos_port = lst[0]);
+            directorio.show()
+            #chat = Chat(my_port = lst[1],contact_port = lst[0])
+            #chat.show()
         sys.exit(app.exec_())
     else:
         ipw = IPAdress()

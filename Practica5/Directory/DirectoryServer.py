@@ -15,6 +15,7 @@
 #                                                   #
 # Distributed under terms of the MIT license.       #
 #####################################################
+#python DirectoryServer.py port_number -l
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
@@ -22,8 +23,8 @@ from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 import sys,getopt
 sys.path.insert(0, '../')
 sys.path.insert(0, 'Constants')
-from AuxiliarFunctions import *
-from Constants import *
+from Constants.AuxiliarFunctions import get_ip_address
+import Constants.Constants
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
@@ -36,11 +37,21 @@ class GeneralDirectory:
                         número del puerto por el cual recibirá las peticiones
     """
     def __init__(self, port = None):
-        #TODO
         self.client_dictionary = {}
-        funtionWrapper = FunctionWrapperDirectory(self.client_dictionary)
-        print "Directorio de ubicacion activo, mi direccion es:"
-        print "(%s, %s)" %(get_ip_address(), port)
+        if(port == None):
+            self.server = SimpleXMLRPCServer((get_ip_address(), 5555), allow_none = True)
+            print "Directorio de ubicacion activo, mi direccion es:"
+            print "(%s, %s)" %(get_ip_address(), 5555)
+        else:
+            self.server = SimpleXMLRPCServer(("localhost", int(port)), allow_none = True)
+            print "Directorio de ubicacion activo, mi direccion es:"
+            print "(%s, %s)" %("localhost", str(int(port)))
+        self.server.register_introspection_functions()
+        self.server.register_multicall_functions()
+        functionWrapper = FunctionWrapperDirectory(self.client_dictionary)
+        self.server.register_instance(functionWrapper)
+
+
 
 
 class FunctionWrapperDirectory:
@@ -52,22 +63,28 @@ class FunctionWrapperDirectory:
     def __init__(self,client_dictionary):
         self.client_dictionary = client_dictionary
 
-
+    """ **************************************************
+    Metodo que regresa los contactos activos en el directorio excluyendo el contacto actual.
+    ************************************************** """
     def get_contacts_wrapper(self,  username):
-        #TODO
+        temp = self.client_dictionary
+        del temp[username]
+        return temp
 
+    """ **************************************************
+    Metodo que agrega al cliente al diccionario de usuarios activos.
+    ************************************************** """
     def connect_wrapper(self, ip_string, port_string, username):
-        #Las llaves del diccionario de un cliente debe usar las 
-        #llaves que se encuentran en las constantes:
-            #NAME_CONTACT
-            #IP_CONTACT
-            # PORT_CONTACT
-           
-        #TODO
+        self.client_dictionary[username] = {'NAME_CONTACT': username, 'IP_CONTACT':ip_string, 'PORT_CONTACT':port_string}
 
+    """ **************************************************
+    Metodo que elimina al cliente de los usuarios activos.
+    ************************************************** """
     def disconnect_wrapper(self, ip_string, port_string):
-        #TODO
-
+        for(key : self.client_dictionary.keys())
+            temp = self.client_dictionary[key]
+            if(temp['IP_CONTACT'] == ip_string and temp['PORT_CONTACT'] == port_string)
+                del self.client_dictionary[key]
 # **************************************************
 #  Definicion de la funcion principal
 #**************************************************
@@ -80,13 +97,18 @@ def main(argv):
         print 'Uso entre computadoras dentro de la red'
         print '$ python Directory/DirectoryServer.py '
         sys.exit(2)
-    if opts: #Si el usuario mandó alguna bandera
-        local = True if '-l' in opts[0] else False
-        if local:
-            general_server = GeneralDirectory(port = args[0]).server
-        else:
-            general_server = GeneralDirectory().server
-        general_server.serve_forever()
+    #if opts: #Si el usuario mandó alguna bandera
+    if opts and ('-l' in opts[0]):
+        local = True
+    else:
+        local = False
+    if local:
+        print args[0]
+        general_server = GeneralDirectory(port = args[0]).server
+    else:
+        print "entro"
+        general_server = GeneralDirectory().server
+    general_server.serve_forever()
 
 
 if __name__ == '__main__':

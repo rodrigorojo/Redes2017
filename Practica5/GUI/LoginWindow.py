@@ -37,7 +37,7 @@ class Login(QtGui.QDialog):
     def button_login(self):
         print int(str(self.textP1.text()))
         self.accept()
-        self.regresa_str()
+        #self.regresa_str()
         #return c
     """**************************************************
     Funcion auxiliar
