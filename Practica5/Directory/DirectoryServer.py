@@ -81,9 +81,9 @@ class FunctionWrapperDirectory:
     Metodo que elimina al cliente de los usuarios activos.
     ************************************************** """
     def disconnect_wrapper(self, ip_string, port_string):
-        for(key : self.client_dictionary.keys())
+        for key in self.client_dictionary.keys():
             temp = self.client_dictionary[key]
-            if(temp['IP_CONTACT'] == ip_string and temp['PORT_CONTACT'] == port_string)
+            if(temp['IP_CONTACT'] == ip_string) and (temp['PORT_CONTACT'] == port_string):
                 del self.client_dictionary[key]
 # **************************************************
 #  Definicion de la funcion principal
