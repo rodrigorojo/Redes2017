@@ -21,7 +21,7 @@ class Chat(QtGui.QDialog):
         if ip == None:
             self.mc = RequestChannel(my_port = int(my_port),contact_port = int(contact_port))
         else:
-            self.mc = RequestChannelChannel(contact_ip = ip, my_port = 5000, contact_port = 5000)
+            self.mc = RequestChannel(contact_ip = ip, my_port = 5000, contact_port = 5000)
         self.Con = QLabel(self)
         self.Con.setText(CONV)
 
