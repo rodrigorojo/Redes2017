@@ -66,25 +66,38 @@ class FunctionWrapperDirectory:
     """ **************************************************
     Metodo que regresa los contactos activos en el directorio excluyendo el contacto actual.
     ************************************************** """
-    def get_contacts_wrapper(self,  username):
-        temp = self.client_dictionary
-        del temp[username]
-        return temp
+    def get_contacts_wrapper(self, username):
+        for key in self.client_dictionary.keys():
+            if(username != key):
+                temp0[key] = self.client_dictionary[key]
+        return temp0
 
     """ **************************************************
     Metodo que agrega al cliente al diccionario de usuarios activos.
     ************************************************** """
     def connect_wrapper(self, ip_string, port_string, username):
-        self.client_dictionary[username] = {'NAME_CONTACT': username, 'IP_CONTACT':ip_string, 'PORT_CONTACT':port_string}
-
+        self.client_dictionary[str(username)] = {'NAME_CONTACT': username, 'IP_CONTACT':ip_string, 'PORT_CONTACT':port_string}
+        print "...___..."
+        print self.client_dictionary
     """ **************************************************
     Metodo que elimina al cliente de los usuarios activos.
     ************************************************** """
     def disconnect_wrapper(self, ip_string, port_string):
         for key in self.client_dictionary.keys():
-            temp = self.client_dictionary[key]
-            if(temp['IP_CONTACT'] == ip_string) and (temp['PORT_CONTACT'] == port_string):
+            temp1 = self.client_dictionary[key]
+            if(temp1['IP_CONTACT'] == ip_string) and (temp1['PORT_CONTACT'] == port_string):
                 del self.client_dictionary[key]
+    """ **************************************************
+    Metodo que elimina al cliente de los usuarios activos, por nombre de usuario.
+    ************************************************** """
+    def disconnect_wrapper_username(self, username):
+        print self.client_dictionary
+        if(str(username) in self.client_dictionary.keys()):
+            print "sisisisisisisisisisisiis"
+        else:
+            print "nononooonnonononononononon"
+
+        del self.client_dictionary[str(username)]
 # **************************************************
 #  Definicion de la funcion principal
 #**************************************************

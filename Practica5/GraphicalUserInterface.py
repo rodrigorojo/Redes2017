@@ -44,7 +44,7 @@ def main(argv):
         login = Login()
         if login.exec_() == QtGui.QDialog.Accepted:
             lst = login.regresa_str()
-            directorio = Directorio(my_port = lst[1],server_contactos_port = lst[0]);
+            directorio = Directorio(my_username = str(lst[2]), my_port = lst[0],server_contactos_port = lst[1], ip = "localhost");
             directorio.show()
             #chat = Chat(my_port = lst[1],contact_port = lst[0])
             #chat.show()
@@ -55,6 +55,8 @@ def main(argv):
         if ipw.exec_() == QtGui.QDialog.Accepted:
             contact_ip = ipw.regresa_contact_ip()
             print "contact_ip---->"+contact_ip
+            #directorio = Directorio(my_username = str(lst[2]),server_contactos_port = 4999, ip = "localhost");
+            #directorio.show()
             chat = Chat(ip = contact_ip)
             chat.show()
         sys.exit(app.exec_())

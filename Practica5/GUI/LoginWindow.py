@@ -12,6 +12,10 @@ class Login(QtGui.QDialog):
     def __init__(self, parent=None):
         super(Login, self).__init__(parent)
 
+        self.P0 = QLabel(self)
+        self.P0.setText("Ingresa tu nombre de usuario")
+        self.textP0 = QLineEdit(self)
+
         self.P1 = QLabel(self)
         self.P1.setText(INFOPORT1)
         self.textP1 = QLineEdit(self)
@@ -24,6 +28,8 @@ class Login(QtGui.QDialog):
         self.buttonLogin.clicked.connect(self.button_login)
 
         layout = QVBoxLayout(self)
+        layout.addWidget(self.P0)
+        layout.addWidget(self.textP0)
         layout.addWidget(self.P1)
         layout.addWidget(self.textP1)
         layout.addWidget(self.P2)
@@ -46,4 +52,5 @@ class Login(QtGui.QDialog):
         tmp = []
         tmp.append((str(self.textP1.text())))
         tmp.append((str(self.textP2.text())))
+        tmp.append((str(self.textP0.text())))
         return tmp
