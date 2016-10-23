@@ -4,9 +4,9 @@ from PyQt4.QtGui import *
 import multiprocessing as mp
 
 class VideocallWindow(QtGui.QDialog):
-    def __init__(self, canal):
+    def __init__(self, cliente):
         super(VideocallWindow, self).__init__()
-        self.mc = canal
+        self.cliente = cliente
         self.buttonStart = QPushButton("Empezar Videollamada", self)
         self.buttonStart.clicked.connect(self.llamar)
 
@@ -23,12 +23,11 @@ class VideocallWindow(QtGui.QDialog):
 
     def llamar(self):
         print "Empezar el hilo y grabar"
-        self.mc.client.estaVideollamando = True
-        self.mc.server.leEstanVideollamando = True
-        self.mc.client.videollamada_en_thread()
-
+        self.cliente.estaVideollamando = True
+        #self.mc.server.leEstanVideollamando = True
+        self.cliente.videollamada_en_thread()
 
     def colgar(self):
-        self.mc.client.stop_videollamada();
-        self.mc.server.leEstanVideollamando = False
+        self.cliente.stop_videollamada();
+        #self.mc.server.leEstanVideollamando = False
         print "oprimio boton Terminar Llamada"

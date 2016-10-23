@@ -39,6 +39,8 @@ class MyApiClient():
         #interfaz.insertPlainText("YO: " + str(mensaje) +"\n")
         return self.server.recibe_mensaje(str(mensaje))
 
+
+
     """**************************************************
     Funcion que hace que la videollamada termine
     **************************************************"""

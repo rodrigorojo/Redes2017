@@ -16,16 +16,13 @@ from VideocallWindow import *
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
 class Chat(QtGui.QDialog):
-    def __init__(self, parent=None, my_port = None,contact_port = None, ip = None):
+    def __init__(self, parent = None, cliente = None, server = None):
         super(Chat, self).__init__(parent)
-        if ip == None:
-            self.mc = RequestChannel(my_port = int(my_port),contact_port = int(contact_port))
-        else:
-            self.mc = RequestChannel(contact_ip = ip, my_port = 5000, contact_port = 5000)
+        self.cliente = cliente
         self.Con = QLabel(self)
         self.Con.setText(CONV)
 
-        self.Conv = self.mc.server.conversacion
+        self.Conv = server.conversacion
         self.Conv.setReadOnly(True)
 
         self.restext = QLineEdit(self)
@@ -57,14 +54,14 @@ class Chat(QtGui.QDialog):
     Funcion que crea una nueva ventana de llamar
     **************************************************"""
     def llamar(self):
-        self.ventanaLlamada = CallWindow(self.mc)
+        self.ventanaLlamada = CallWindow(self.cliente)
         self.ventanaLlamada.show()
 
     """**************************************************
     Funcion que crea una nueva ventana de videollamar
     **************************************************"""
     def videollamar(self):
-        self.ventanaVideollamada = VideocallWindow(self.mc)
+        self.ventanaVideollamada = VideocallWindow(self.cliente)
         self.ventanaVideollamada.show()
 
     """**************************************************
@@ -73,5 +70,5 @@ class Chat(QtGui.QDialog):
     def responder(self):
         print "oprimio boton responder con texto: " + str(self.restext.text())
         self.Conv.insertPlainText("YO: " + str(self.restext.text()) +"\n")
-        self.mc.client.client_send_message(self.restext.text())
+        self.cliente.client_send_message(self.restext.text())
         self.restext.setText(EMPTY_STR)

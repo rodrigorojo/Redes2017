@@ -52,22 +52,14 @@ class RequestChannel():
                 representa el puerto de la instancia del contacto
     **************************************************"""
     def __init__(self, contact_ip = None, my_port = None,contact_port = None):
-        self.contact_ip = contact_ip
-        self.my_port = my_port
-        self.contact_port = contact_port
+        #self.contact_ip = contact_ip
+        #self.my_port = my_port
+        #self.contact_port = contact_port
 
-        if( contact_ip == None):
-            self.server = MyApiServer(my_port = self.my_port)
-            api_server_thread = Thread(target = self.server.init_server)
-            api_server_thread.daemon=True
-            api_server_thread.start()
-            self.client = MyApiClient(LOCALHOST, contact_port = self.contact_port)
+        if( contact_ip == "localhost"):
+            self.api_client = MyApiClient(host = LOCALHOST, contact_port = contact_port)
         else:
-            self.server = MyApiServer(ip = get_ip_address(), my_port= 5000)
-            api_server_thread = Thread(target = self.server.init_server)
-            api_server_thread.daemon = True
-            api_server_thread.start()
-            self.client = MyApiClient(self.contact_ip, 5000)
+            self.api_client = MyApiClient(host = contact_ip, contact_port = 5000)
 
     """**************************************************
     Metodo que se encarga de mandar texto al contacto con
@@ -99,25 +91,23 @@ class RequestChannel():
 
 
 class BidirectionalChannel(RequestChannel):
-    def __init__(self, Qparent, contact_ip = None,  contact_port = None,my_port = None):
-        self.contact_ip = contact_ip
+    def __init__(self, Qparent= None, my_ip = None,  contact_port = None,my_port = None):
+        #self.contact_ip = contact_ip
         self.my_port = my_port
-        self.contact_port = contact_port
+        #self.contact_port = contact_port
 
-        if( contact_ip == None):
+        if( my_ip == "localhost"):
             self.server = MyApiServer(my_port = self.my_port)
-            api_server_thread = Thread(target = self.server.init_server)
-            api_server_thread.daemon=True
-            api_server_thread.start()
-            self.client = MyApiClient(LOCALHOST, contact_port = self.contact_port)
+            self.api_server_thread = Thread(target = self.server.init_server)
+            self.api_server_thread.daemon=True
+            self.api_server_thread.start()
+
         else:
             self.server = MyApiServer(ip = get_ip_address(), my_port= 5000)
-            api_server_thread = Thread(target = self.server.init_server)
-            api_server_thread.daemon = True
-            api_server_thread.start()
-            self.client = MyApiClient(self.contact_ip, 5000)
+            self.api_server_thread = Thread(target = self.server.init_server)
+            self.api_server_thread.daemon = True
+            self.api_server_thread.start()
 
-        #TODO
     """**************************************************
     Metodos Get
     **************************************************"""

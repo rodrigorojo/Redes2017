@@ -24,6 +24,7 @@ class Directorio(QtGui.QDialog):
         self.adios = False
         self.my_port = my_port
         self.username = my_username
+        self.ip = ip
         self.directory_client = xmlrpclib.ServerProxy(HTTP+ ip +TWO_DOTS+str(server_contactos_port), allow_none = True)
         #agrega al que se conecta
         self.directory_client.connect_wrapper(LOCALHOST,str(my_port),my_username)
@@ -48,6 +49,8 @@ class Directorio(QtGui.QDialog):
         layout.addWidget(self.buttonConectar)
 
         self.setWindowTitle("Directorio")
+        #se crea servidor
+        self.bdc = BidirectionalChannel(my_ip = ip,my_port = my_port)
 
     def conectar(self):
         username_contacto = str(self.muestraDirectorio.currentItem().text())
@@ -57,7 +60,9 @@ class Directorio(QtGui.QDialog):
         print dic1['NAME_CONTACT']
         print dic1['IP_CONTACT']
         print dic1['PORT_CONTACT']
-        self.chat = Chat(my_port = self.my_port,contact_port = dic1['PORT_CONTACT'])
+        self.rc = RequestChannel(contact_ip=dic1['IP_CONTACT'], contact_port= int(dic1['PORT_CONTACT']))
+
+        self.chat = Chat(cliente = self.rc.get_api_client(), server = self.bdc.server)
         self.chat.show()
 
     def actualizar_contactos(self):

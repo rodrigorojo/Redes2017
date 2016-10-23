@@ -4,9 +4,9 @@ from PyQt4.QtGui import *
 import multiprocessing as mp
 
 class CallWindow(QtGui.QDialog):
-    def __init__(self, canal):
+    def __init__(self, cliente):
         super(CallWindow, self).__init__()
-        self.mc = canal
+        self.cliente = cliente
         self.buttonStart = QPushButton("Empezar llamada", self)
         self.buttonStart.clicked.connect(self.llamar)
 
@@ -23,9 +23,9 @@ class CallWindow(QtGui.QDialog):
 
     def llamar(self):
         print "Empezar el hilo y grabar"
-        self.mc.client.estaLlamando = True;
-        self.mc.client.llamada_en_thread()
+        self.cliente.estaLlamando = True;
+        self.cliente.llamada_en_thread()
 
     def colgar(self):
-        self.mc.client.stop_llamada();
+        self.cliente.stop_llamada();
         #print "oprimio boton Terminar Llamada"

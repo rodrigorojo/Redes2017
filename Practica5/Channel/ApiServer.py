@@ -32,6 +32,7 @@ import cStringIO
 from threading import Thread
 from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
+from GUI.ChatWindow import Chat
 #           Mis bibliotecas
 import sys
 from Constants.AuxiliarFunctions import *
@@ -54,8 +55,10 @@ class MyApiServer(QtGui.QDialog):
         self.my_port = my_port
         self.frames = []
         self.leEstanVideollamando = True
+        self.primeraVez = True
         if(ip == None):
             self.server = SimpleXMLRPCServer((LOCALHOST, int(my_port)), allow_none = True)
+            print "servidor en localhost:"+ str(int(my_port))
         else:
             self.server = SimpleXMLRPCServer((ip, int(my_port)), allow_none = True)
             print "servidor en ip: " +ip+" : "+ str(int(my_port))
@@ -66,6 +69,8 @@ class MyApiServer(QtGui.QDialog):
         self.server.register_function(self.recibe_mensaje, RECIBE_MENSAJE_FUNC)
         self.server.register_function(self.recibe_audio, "recibe_audio")
         self.server.register_function(self.recibe_video, "recibe_video")
+        #self.chatWindowServer = Chat(server = self.server)
+
 
     """**************************************************
     Funcion para empezar el servidor
@@ -77,7 +82,7 @@ class MyApiServer(QtGui.QDialog):
     @param <str> msg: mensaje que recibe
     **************************************************"""
     def recibe_mensaje(self, mensaje):
-        #print "recibe____mensaje: Contacto:::" + mensaje
+        print "recibe____mensaje: Contacto:::" + mensaje
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
 
     """**************************************************
