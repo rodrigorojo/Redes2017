@@ -6,7 +6,12 @@ from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
 from LoginWindow import *
 import multiprocessing as mp
-from GUI.CallWindow import *
+
+######para la llamada
+#from CallWindow import *
+from Channel.RecordAudio import *
+######
+
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
@@ -20,7 +25,7 @@ class Chat(QtGui.QDialog):
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
-        self.Conv = QTextEdit(self)
+        self.Conv = self.mc.server.conversacion
         self.Conv.setReadOnly(True)
 
         self.restext = QLineEdit(self)
@@ -29,8 +34,7 @@ class Chat(QtGui.QDialog):
         self.buttonres.clicked.connect(self.responder)
 
         self.buttonCall = QPushButton("Llamar", self)
-        self.buttonCall.clicked.connect(self.call)
-
+        self.buttonCall.clicked.connect(self.llamar)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.Con)
@@ -43,27 +47,45 @@ class Chat(QtGui.QDialog):
 
         self.setWindowTitle(Constants().CHAT)
 
-    def call(self):
-        self.accept()
-        self.mc.client.client_make_call()
-
-    def get_call(self):
-        self.mc.client.get_call()
+    """**************************************************
+    Funcion que crea una nueva ventana de llamar
+    **************************************************"""
+    def llamar(self):
+        self.ventanaLlamada = CallWindow(self.mc)
+        self.ventanaLlamada.show()
 
     """**************************************************
     Funcion que usa el boton buttonres para enviar el mensaje
     **************************************************"""
     def responder(self):
-        #print "oprimio boton responder con texto: " + str(self.restext.text())
-        tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)
-        for elm in tmplst:
-            self.Conv.append(elm)
+        print "oprimio boton responder con texto: " + str(self.restext.text())
+        self.Conv.insertPlainText("YO: " + str(self.restext.text()) +"\n")
+        self.mc.client.client_send_message(self.restext.text())
         self.restext.setText(Constants().EMPTY_STR)
-    """**************************************************
-    Funcion auxiliar
-    **************************************************"""
-    def sincroniza (self, otro = None):
-        #print "esta sincronizando"
-        tmplst = self.mc.client.client_send_message(str(self.restext.text()))
-        for elm in tmplst:
-            otro.Conv.append(elm)
+
+class CallWindow(QtGui.QDialog):
+    def __init__(self, canal):
+        super(CallWindow, self).__init__()
+        self.mc = canal
+        self.buttonStart = QPushButton("Empezar llamada", self)
+        self.buttonStart.clicked.connect(self.llamar)
+
+        self.buttonStop = QPushButton("Terminar Llamada", self)
+        self.buttonStop.clicked.connect(self.colgar)
+
+        layout = QVBoxLayout(self)
+        layout2 = QHBoxLayout(self)
+        layout2.addWidget(self.buttonStart)
+        layout2.addWidget(self.buttonStop)
+        layout.addLayout(layout2)
+
+        self.setWindowTitle("Llamada")
+        
+    def llamar(self):
+        print "Empezar el hilo y grabar o algo asi"
+        self.mc.client.estaLlamando = True;
+        self.mc.client.llamada_en_thread()
+
+    def colgar(self):
+        self.mc.client.stop_llamada();
+        print "oprimio boton Terminar Llamada"

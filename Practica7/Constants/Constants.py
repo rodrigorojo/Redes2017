@@ -10,8 +10,15 @@ class Constants(object):
     CHAT = "Chat"
     CONV = "Conversacion"
     RES = "Responde"
-    RECIVE_MESSAGE_FUNC = "recive_message"
+    RECIBE_MENSAJE_FUNC = "recibe_mensaje"
     EMPTY_STR = ""
     LOCALHOST = "localhost"
     HTTP = "http://"
     TWO_DOTS = ":"
+    DEFAULT_PORT = "5000"
+    LLAMADADV = "Llamada de voz"
+    LLAMADA = "Llamada"
+    CHUNK = 1024
+    CHANNELS = 1
+    RATE = 44100
+    RECORD_SECONDS = 2

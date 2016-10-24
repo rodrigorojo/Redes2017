@@ -6,20 +6,19 @@ from PyQt4.QtGui import *
 import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
-from threading import Thread
 from Constants.Constants import *
 import pyaudio
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
-class MyApiServer:
+class MyApiServer(QtGui.QDialog):
     """**************************************************
     Constructor de la clase
     @param <str> my_port: El puerto en el que se pondra el servidor
     **************************************************"""
     def __init__(self, ip = None, my_port = None):
-        global conversation
-        conversation = []
+        super(MyApiServer, self).__init__(None)
+        self.conversacion = QTextEdit(self)
         self.my_port = my_port
         if(ip == None):
             self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
@@ -30,55 +29,51 @@ class MyApiServer:
         self.server.register_multicall_functions()
         self.functionWrapper = FunctionWrapper()
         self.server.register_instance(self.functionWrapper)
-        self.server.register_function(self.recive_message, Constants().RECIVE_MESSAGE_FUNC)
+        self.server.register_function(self.recibe_mensaje, Constants().RECIBE_MENSAJE_FUNC)
+        self.server.register_function(self.recibe_audio, "recibe_audio")
 
     """**************************************************
-    Reproduce el audio recibido
-    @param audio: EL audio que se va a reproducir
-    **************************************************"""
-    def playAudio(self, audio):
-        CHUNK = 1024
-        CHANNELS = 1
-        RATE = 44100
-        DELAY_SECONDS = 5
-        p = pyaudio.PyAudio()
-        FORMAT = p.get_format_from_width(2)
-        stream = p.open(format=FORMAT,
-                        channels=CHANNELS,
-                        rate=RATE,
-                        output=True,
-                        frames_per_buffer=CHUNK)
-
-        self.data1 = audio.data
-        stream.write(data1)
-        stream.close()
-        p.terminate()
-    """**************************************************
-    Fucnion para empezar el servidor
+    Funcion para empezar el servidor
     **************************************************"""
     def init_server(self):
         self.server.serve_forever()
     """**************************************************
-    Funcion que recive un mensaje y lo agrega a la lista de mensajes
+    Funcion que recibe un mensaje y lo agrega a la lista de mensajes
     @param <str> msg: mensaje que recive
     **************************************************"""
-    def recive_message(self, msg):
-        print "recive_message: " +msg
-        conversation.append(msg)
-        return conversation
-
+    def recibe_mensaje(self, mensaje):
+        #print "recibe____mensaje: Contacto:::" + mensaje
+        self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
+    """**************************************************
+    Funcion que recibe el audio y se lo pasa a otra
+    **************************************************"""
+    def recibe_audio(self,audio):
+        print "El audio se recibio en servidor "
+        self.reproduce(audio)
+    """**************************************************
+    Funcion que recibe reproduce el audio recibido
+    **************************************************"""
+    def reproduce(self, audio):
+        print "reproduciendo..."
+        self.p = pyaudio.PyAudio()
+        self.FORMAT = self.p.get_format_from_width(2)
+        self.stream = self.p.open(format=self.FORMAT,
+                        channels=1,
+                        rate=44100,
+                        output=True,
+                        frames_per_buffer=3024)
+        self.data = audio.data
+        self.stream.write(self.data)
+        self.stream.close()
+        self.p.terminate()
+    """**************************************************
+    Funcion para pegar el mensaje a la interfaz
+    **************************************************"""
     def chat_window(self,msg):
         self.Conv = QTextEdit(self)
         self.Conv.setReadOnly(True)
         self.Conv.append(msg)
         return self.Conv
-    """**************************************************
-    Fucnion auxiliar
-    **************************************************"""
-    def get_lst_conv(self, qline):
-        for elm in conversation:
-            qline.append(elm)
-
 
 class FunctionWrapper:
     def __init__(self):
