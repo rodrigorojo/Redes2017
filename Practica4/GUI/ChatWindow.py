@@ -6,7 +6,13 @@ from Channel.ApiClient import MyApiClient
 from Channel.Channel import Channel
 from LoginWindow import *
 import multiprocessing as mp
-from GUI.CallWindow import *
+
+######para la llamada
+from CallWindow import *
+from Channel.RecordAudio import *
+######
+from VideocallWindow import *
+
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal
 **************************************************"""
@@ -20,7 +26,7 @@ class Chat(QtGui.QDialog):
         self.Con = QLabel(self)
         self.Con.setText(Constants().CONV)
 
-        self.Conv = QTextEdit(self)
+        self.Conv = self.mc.server.conversacion
         self.Conv.setReadOnly(True)
 
         self.restext = QLineEdit(self)
@@ -28,9 +34,11 @@ class Chat(QtGui.QDialog):
         self.buttonres = QPushButton(Constants().RES, self)
         self.buttonres.clicked.connect(self.responder)
 
-        self.buttonCall = QPushButton("Llamar", self)
-        self.buttonCall.clicked.connect(self.call)
+        self.buttonCall = QPushButton("Llamada de Audio", self)
+        self.buttonCall.clicked.connect(self.llamar)
 
+        self.buttonVideocall = QPushButton("Videollamada", self)
+        self.buttonVideocall.clicked.connect(self.videollamar)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.Con)
@@ -38,32 +46,33 @@ class Chat(QtGui.QDialog):
         layout2 = QHBoxLayout(self)
         layout2.addWidget(self.restext)
         layout2.addWidget(self.buttonres)
-        layout2.addWidget(self.buttonCall)
+        layout3 = QHBoxLayout(self)
+        layout3.addWidget(self.buttonCall)
+        layout3.addWidget(self.buttonVideocall)
+        layout.addLayout(layout3)
         layout.addLayout(layout2)
 
         self.setWindowTitle(Constants().CHAT)
 
-    def call(self):
-        self.accept()
-        self.mc.client.client_make_call()
+    """**************************************************
+    Funcion que crea una nueva ventana de llamar
+    **************************************************"""
+    def llamar(self):
+        self.ventanaLlamada = CallWindow(self.mc)
+        self.ventanaLlamada.show()
 
-    def get_call(self):
-        self.mc.client.get_call()
+    """**************************************************
+    Funcion que crea una nueva ventana de videollamar
+    **************************************************"""
+    def videollamar(self):
+        self.ventanaVideollamada = VideocallWindow(self.mc)
+        self.ventanaVideollamada.show()
 
     """**************************************************
     Funcion que usa el boton buttonres para enviar el mensaje
     **************************************************"""
     def responder(self):
-        #print "oprimio boton responder con texto: " + str(self.restext.text())
-        tmplst = self.mc.client.client_send_message(str(self.restext.text()))#)
-        for elm in tmplst:
-            self.Conv.append(elm)
+        print "oprimio boton responder con texto: " + str(self.restext.text())
+        self.Conv.insertPlainText("YO: " + str(self.restext.text()) +"\n")
+        self.mc.client.client_send_message(self.restext.text())
         self.restext.setText(Constants().EMPTY_STR)
-    """**************************************************
-    Funcion auxiliar
-    **************************************************"""
-    def sincroniza (self, otro = None):
-        #print "esta sincronizando"
-        tmplst = self.mc.client.client_send_message(str(self.restext.text()))
-        for elm in tmplst:
-            otro.Conv.append(elm)
