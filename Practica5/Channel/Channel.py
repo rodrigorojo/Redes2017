@@ -66,8 +66,7 @@ class RequestChannel():
     el cual se estableció la conexion
     **************************************************"""
     def send_text(self, text):
-        #TODO
-        print ""
+        self.api_client.client_send_message(text)
     """**************************************************
     Metodo que se encarga de mandar iniciar una conversacion
     con un nuevo contacto
@@ -81,8 +80,7 @@ class RequestChannel():
     con el cual se estableció la conexion
     **************************************************"""
     def begin_call(self):
-        #TODO
-        print ""
+        self.api_client.llamada_en_thread()
     """**************************************************
     Metodos Get
     **************************************************"""
@@ -112,4 +110,4 @@ class BidirectionalChannel(RequestChannel):
     Metodos Get
     **************************************************"""
     def get_api_server(self):
-        return self.api_server_thread
+        return self.server

@@ -47,10 +47,9 @@ class Directorio(QtGui.QDialog):
         layout.addWidget(self.P1)
         layout.addWidget(self.muestraDirectorio)
         layout.addWidget(self.buttonConectar)
-
         self.setWindowTitle("Directorio")
-        #se crea servidor
-        self.bdc = BidirectionalChannel(my_ip = ip,my_port = my_port)
+        #Servidor
+        self.bdc = BidirectionalChannel(my_ip = self.ip, my_port = self.my_port)
 
     def conectar(self):
         username_contacto = str(self.muestraDirectorio.currentItem().text())
@@ -60,10 +59,19 @@ class Directorio(QtGui.QDialog):
         print dic1['NAME_CONTACT']
         print dic1['IP_CONTACT']
         print dic1['PORT_CONTACT']
-        self.rc = RequestChannel(contact_ip=dic1['IP_CONTACT'], contact_port= int(dic1['PORT_CONTACT']))
+        self.rc = RequestChannel(contact_ip = dic1['IP_CONTACT'], contact_port = int(dic1['PORT_CONTACT']))
 
-        self.chat = Chat(cliente = self.rc.get_api_client(), server = self.bdc.server)
-        self.chat.show()
+        self.ventana = Chat(cliente = self.rc.get_api_client())#self.bdc.get_api_server().crea_ventana(cl = self.rc.get_api_client())
+        self.ventana.show()
+
+        self.rc.get_api_client().client_llama_ventana(cliente_ip = self.ip, cliente_port = self.my_port)
+
+        #self.bdc.get_api_server().ventana_remota(cliente_ip = self.ip, cliente_port = self.my_port)
+
+        #bdc.chat
+
+        #self.chat = Chat(cliente = self.rc.get_api_client(), server = self.bdc.server)
+        #self.chat.show()
 
     def actualizar_contactos(self):
         if(not self.adios):

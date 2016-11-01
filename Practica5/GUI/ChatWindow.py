@@ -22,7 +22,7 @@ class Chat(QtGui.QDialog):
         self.Con = QLabel(self)
         self.Con.setText(CONV)
 
-        self.Conv = server.conversacion
+        self.Conv = QTextEdit(self)
         self.Conv.setReadOnly(True)
 
         self.restext = QLineEdit(self)

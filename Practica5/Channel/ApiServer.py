@@ -34,6 +34,7 @@ from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
 from GUI.ChatWindow import Chat
 #           Mis bibliotecas
+import Channel
 import sys
 from Constants.AuxiliarFunctions import *
 from Constants import *
@@ -56,6 +57,7 @@ class MyApiServer(QtGui.QDialog):
         self.frames = []
         self.leEstanVideollamando = True
         self.primeraVez = True
+        self.muestrala = False
         if(ip == None):
             self.server = SimpleXMLRPCServer((LOCALHOST, int(my_port)), allow_none = True)
             print "servidor en localhost:"+ str(int(my_port))
@@ -70,8 +72,7 @@ class MyApiServer(QtGui.QDialog):
         self.server.register_function(self.recibe_audio, "recibe_audio")
         self.server.register_function(self.recibe_video, "recibe_video")
         self.server.register_function(self.recibe_video, "recibe_ventana")
-        #self.chatWindowServer = Chat(server = self.server)
-
+        self.server.register_function(self.ventana_remota, "ventana_remota")
 
     """**************************************************
     Funcion para empezar el servidor
@@ -82,12 +83,8 @@ class MyApiServer(QtGui.QDialog):
     Funcion que recibe un mensaje y lo agrega a la lista de mensajes
     @param <str> msg: mensaje que recibe
     **************************************************"""
-    def recibe_mensaje(self, mensaje, server):
+    def recibe_mensaje(self, mensaje):
         print "recibe____mensaje: Contacto:::" + mensaje
-        if(self.primeraVez):
-            self.cws = Chat(server = server)
-            self.cws.show()
-            self.primeraVez = False
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
 
     def recibe_ventana(self, ventana):
@@ -157,6 +154,16 @@ class MyApiServer(QtGui.QDialog):
         self.Conv.setReadOnly(True)
         self.Conv.append(msg)
         return self.Conv
+
+    def crea_ventana(self, cl):
+        return Chat(cliente = cl)
+
+    def ventana_remota(self, cliente_ip, cliente_port):
+        print "Se abrio la ventana en servidor con puerto: " + str(self.my_port)
+        self.rc = Channel.RequestChannel(contact_ip = cliente_ip, contact_port = cliente_port)
+        self.ventana = Chat(cliente = self.rc.get_api_client())
+        self.ventana.show()
+
 
 class FunctionWrapper:
     def __init__(self):

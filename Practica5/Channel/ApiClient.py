@@ -27,18 +27,22 @@ class MyApiClient():
         self.estaLlamando = False
         self.estaVideollamando = False
         if contact_port and host:
-            #print "Nuevo Cliente en puerto: "+ str(contact_port)
+            print "Nuevo Cliente en puerto: "+ str(contact_port)
             self.server = xmlrpclib.ServerProxy(HTTP+ host +TWO_DOTS+str(contact_port), allow_none = True)
             print "cliente en: "+HTTP+ host +TWO_DOTS+str(contact_port)
+
+    def client_llama_ventana(self,cliente_ip, cliente_port):
+        self.server.ventana_remota(cliente_ip, cliente_port)
     """**************************************************
     Funcion para enviar mensajes
     @param <str> message: El mensaje que enviara
     **************************************************"""
     def client_send_message(self, mensaje):
         #print "cliente en host: "+str(self.host)+ " : "+str(self.contact_port)+"envio mensaje"
+        print HTTP+ self.host +TWO_DOTS+str(self.contact_port)
         print "El mensaje que se enviara es: " + str(mensaje)
-        #interfaz.insertPlainText("YO: " + str(mensaje) +"\n")
-        return self.server.recibe_mensaje(str(mensaje),self.server)
+        return self.server.recibe_mensaje(str(mensaje))
+        #return self.server.recibe_mensaje(str(mensaje),self.server)
 
     """**************************************************
     Funcion que hace que la videollamada termine
