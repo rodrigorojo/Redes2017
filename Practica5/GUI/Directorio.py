@@ -6,6 +6,7 @@ from Channel.ApiClient import MyApiClient
 from Channel.Channel import *
 from LoginWindow import *
 import multiprocessing as mp
+
 ######para la llamada
 from CallWindow import *
 from ChatWindow import *
@@ -51,6 +52,7 @@ class Directorio(QtGui.QDialog):
         #Servidor
         self.bdc = BidirectionalChannel(my_ip = self.ip, my_port = self.my_port)
 
+
     def conectar(self):
         username_contacto = str(self.muestraDirectorio.currentItem().text())
         print "username" + username_contacto
@@ -66,12 +68,23 @@ class Directorio(QtGui.QDialog):
 
         self.rc.get_api_client().client_llama_ventana(cliente_ip = self.ip, cliente_port = self.my_port)
 
+        self.connect(self, SIGNAL('some_signal'),self.ventana_prueba, QtCore.Qt.QueuedConnection)
+
         #self.bdc.get_api_server().ventana_remota(cliente_ip = self.ip, cliente_port = self.my_port)
 
         #bdc.chat
 
         #self.chat = Chat(cliente = self.rc.get_api_client(), server = self.bdc.server)
         #self.chat.show()
+    def ventana_prueba(self):
+        print "---------Ventana nueva en pruena con puerto del cliente:" + str(self.my_port)
+        self.rc = Channel.RequestChannel(contact_ip = self.ip, contact_port = self.my_port)
+        self.ventana = Chat(cliente = self.rc.get_api_client())
+        self.ventana.show()
+
+    def openNewWindow(self):
+       self.new_window = AuxiliarWindow()
+       self.new_window.show()
 
     def actualizar_contactos(self):
         if(not self.adios):

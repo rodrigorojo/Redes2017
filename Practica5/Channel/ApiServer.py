@@ -33,6 +33,9 @@ from threading import Thread
 from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
 from GUI.ChatWindow import Chat
+
+from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import SIGNAL, QObject
 #           Mis bibliotecas
 import Channel
 import sys
@@ -52,6 +55,7 @@ class MyApiServer(QtGui.QDialog):
     **************************************************"""
     def __init__(self, ip = None, my_port = None):
         super(MyApiServer, self).__init__(None)
+        QtCore.QThread.__init__(self)
         self.conversacion = QTextEdit(self)
         self.my_port = my_port
         self.frames = []
@@ -159,10 +163,12 @@ class MyApiServer(QtGui.QDialog):
         return Chat(cliente = cl)
 
     def ventana_remota(self, cliente_ip, cliente_port):
+        print "entro"
         print "Se abrio la ventana en servidor con puerto: " + str(self.my_port)
+        self.emit(SIGNAL('some_signal'))
         self.rc = Channel.RequestChannel(contact_ip = cliente_ip, contact_port = cliente_port)
-        self.ventana = Chat(cliente = self.rc.get_api_client())
-        self.ventana.show()
+        #self.ventana = Chat(cliente = self.rc.get_api_client())
+        #self.ventana.show()
 
 
 class FunctionWrapper:

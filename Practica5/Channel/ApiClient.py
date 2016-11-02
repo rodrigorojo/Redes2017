@@ -11,6 +11,8 @@ import cv2
 import time
 from GUI.ChatWindow import *
 from cStringIO import StringIO
+from PyQt4.QtCore import SIGNAL, QObject
+from PyQt4 import QtCore, QtGui
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -32,6 +34,7 @@ class MyApiClient():
             print "cliente en: "+HTTP+ host +TWO_DOTS+str(contact_port)
 
     def client_llama_ventana(self,cliente_ip, cliente_port):
+        print "------entorororororororororrororor 66666666666666e66666666666666666666666"
         self.server.ventana_remota(cliente_ip, cliente_port)
     """**************************************************
     Funcion para enviar mensajes
