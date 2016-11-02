@@ -34,7 +34,7 @@ class MyApiClient():
             print "cliente en: "+HTTP+ host +TWO_DOTS+str(contact_port)
 
     def client_llama_ventana(self,cliente_ip, cliente_port):
-        print "------entorororororororororrororor 66666666666666e66666666666666666666666"
+        print "entro ciente_llama_ventana"
         self.server.ventana_remota(cliente_ip, cliente_port)
     """**************************************************
     Funcion para enviar mensajes
