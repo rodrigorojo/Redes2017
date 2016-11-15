@@ -31,7 +31,7 @@ class Directorio(QtGui.QDialog):
         self.directory_client.connect_wrapper(LOCALHOST,str(my_port),my_username)
 
         #self.contacts = self.directory_client.get_contacts_wrapper(my_username)
-
+        self.actualizar()
         self.actualizar = QPushButton("Actualizar Contactos", self)
         self.actualizar.clicked.connect(self.actualizar_contactos)
         self.P1 = QLabel(self)
@@ -51,7 +51,6 @@ class Directorio(QtGui.QDialog):
         self.setWindowTitle("Directorio")
         #Servidor
         self.bdc = BidirectionalChannel(my_ip = self.ip, my_port = self.my_port)
-
 
     def conectar(self):
         username_contacto = str(self.muestraDirectorio.currentItem().text())
@@ -91,6 +90,10 @@ class Directorio(QtGui.QDialog):
             self.muestraDirectorio.clear()
             for key in self.directory_client.get_contacts_wrapper(self.username).keys():
                 self.muestraDirectorio.addItem(str(key))
+    def actualizar(self):
+		timer = QTimer(self)
+		timer.timeout.connect(self.actualizar_contactos)
+		timer.start(5000)
 
     def desconectar_contacto(self):
         self.adios = True
