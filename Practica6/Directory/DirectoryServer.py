@@ -48,8 +48,8 @@ class GeneralDirectory:
             print "(%s, %s)" %("localhost", str(int(port)))
         self.server.register_introspection_functions()
         self.server.register_multicall_functions()
-        functionWrapper = FunctionWrapperDirectory(self.client_dictionary)
-        self.server.register_instance(functionWrapper)
+        self.functionWrapper = FunctionWrapperDirectory(self.client_dictionary)
+        self.server.register_instance(self.functionWrapper)
 
 
 
@@ -93,6 +93,38 @@ class FunctionWrapperDirectory:
     ************************************************** """
     def disconnect_wrapper_username(self, username):
         del self.client_dictionary[str(username)]
+    """ **************************************************
+    Metodo para registrar un cliente.
+    ************************************************** """
+    def registra(self, username, password):
+        if(self.handleLogin(username,password)):
+            return False
+        else:
+            self.guarda_usuario(username,password)
+            return True
+
+    def handleLogin(self, username,password):
+        logs = False
+        with open("db.txt", "r") as f:
+            data = f.readlines()
+            for line in data:
+                words = line.split()
+                print words[0]
+                print words[2]
+                if (username == words[0] and self.str_to_ascii(password) == words[2]):
+                    logs = True
+        return logs
+
+    def guarda_usuario(self,username,password):
+        print "Se guradara el usuario "+username+password
+        with open ('db.txt', 'a') as f: f.write (username+' : '+self.str_to_ascii(password)+'\n')
+
+    def str_to_ascii(self, cad):
+        resultado = ""
+        for c in cad:
+            resultado += str(ord(str(c))+5)
+        return resultado
+
 # **************************************************
 #  Definicion de la funcion principal
 #**************************************************
@@ -112,9 +144,12 @@ def main(argv):
         local = False
     if local:
         print args[0]
-        general_server = GeneralDirectory(port = args[0]).server
+        gd = GeneralDirectory(port = args[0])
+        general_server = gd.server
+        #print gd.functionWrapper.registra(username="rodrigo",password="1234")
+        #print gd.functionWrapper.registra("rodrigo","123")
+        #gd.functionWrapper.guarda_usuario("kk","kk")
     else:
-        print "entro"
         general_server = GeneralDirectory().server
     general_server.serve_forever()
 
