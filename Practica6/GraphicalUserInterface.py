@@ -53,12 +53,12 @@ def main(argv):
         ipw = IPAdress()
         ipw.show()
         if ipw.exec_() == QtGui.QDialog.Accepted:
-            contact_ip = ipw.regresa_contact_ip()
-            print "contact_ip---->"+contact_ip
-            #directorio = Directorio(my_username = str(lst[2]),server_contactos_port = 4999, ip = "localhost");
-            #directorio.show()
-            chat = Chat(ip = contact_ip)
-            chat.show()
+            lst = ipw.regresa_str()
+            #print "contact_ip---->"+contact_ip
+            directorio = Directorio(my_username = str(lst[0]),server_contactos_port = 5555, ip = str(lst[2]));
+            directorio.show()
+            #chat = Chat(ip = contact_ip)
+            #chat.show()
         sys.exit(app.exec_())
     sys.exit(app.exec_())
 if __name__ == '__main__':

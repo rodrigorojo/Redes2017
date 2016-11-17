@@ -116,7 +116,7 @@ class FunctionWrapperDirectory:
         return logs
 
     def guarda_usuario(self,username,password):
-        print "Se guradara el usuario "+username+password
+        print "Se guardara el usuario "+username+password
         with open ('db.txt', 'a') as f: f.write (username+' : '+self.str_to_ascii(password)+'\n')
 
     def str_to_ascii(self, cad):

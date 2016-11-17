@@ -29,7 +29,7 @@ class Registro(QtGui.QDialog):
         self.textP2.setEchoMode(QLineEdit.Password);
 
         self.portLab = QLabel(self)
-        self.portLab.setText("Puerto")
+        self.portLab.setText("Puerto (solo si es local)\n(si es remoto el puerto es 5555)")
         self.port = QLineEdit(self)
 
         self.ipLab = QLabel(self)
@@ -66,18 +66,19 @@ class Registro(QtGui.QDialog):
             msg.exec_()
         if(self.ip.text()):
             print "es remoto"
-            directory_client = xmlrpclib.ServerProxy(HTTP+ ip +TWO_DOTS+str(self.port.text()), allow_none = True)
+            print "El servidor de contactos es: " + HTTP+ self.ip.text() +TWO_DOTS+"5555"
+            directory_client = xmlrpclib.ServerProxy(HTTP+ str(self.ip.text()) +TWO_DOTS+"5555", allow_none = True)
         else:
             print "es local"
             directory_client = xmlrpclib.ServerProxy(HTTP+ "localhost" +TWO_DOTS+str(self.port.text()), allow_none = True)
-            if directory_client.registra(str(self.textP0.text()), str(self.textP1.text())):
-                msg1 = QMessageBox()
-                msg1.setIcon(QMessageBox.Information)
-                msg1.setText("Se registro Ususario")
-                msg1.exec_()
-            else:
-                msg2 = QMessageBox()
-                msg2.setIcon(QMessageBox.Information)
-                msg2.setText("Ya existe el usuario")
-                msg2.exec_()    
+        if directory_client.registra(str(self.textP0.text()), str(self.textP1.text())):
+            msg1 = QMessageBox()
+            msg1.setIcon(QMessageBox.Information)
+            msg1.setText("Se registro Ususario")
+            msg1.exec_()
+        else:
+            msg2 = QMessageBox()
+            msg2.setIcon(QMessageBox.Information)
+            msg2.setText("Ya existe el usuario")
+            msg2.exec_()
         print "hola"
