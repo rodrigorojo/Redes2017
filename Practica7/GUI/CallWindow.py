@@ -3,11 +3,14 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import multiprocessing as mp
 from Channel.RecordAudio import *
+from Channel.ApiClient import MyApiClient
 
 class CallWindow(QtGui.QDialog):
-    def __init__(self, canal):
+    def __init__(self, ip, contact_port):
         super(CallWindow, self).__init__()
-        self.mc = canal
+        #self.mc = canal
+        self.client = MyApiClient(ip, contact_port)
+
         self.buttonStart = QPushButton("Empezar llamada", self)
         self.buttonStart.clicked.connect(self.llamar)
 
@@ -24,8 +27,9 @@ class CallWindow(QtGui.QDialog):
 
     def llamar(self):
         print "Empezar el hilo y grabar"
-        self.mc.client.estaLlamando = True;
-        self.mc.client.llamada_en_thread()
+        #self.mc.client.estaLlamando = True;
+        #self.mc.client.llamada_en_thread()
+        self.client.client_send_audio()
 
     def colgar(self):
         self.mc.client.stop_llamada();

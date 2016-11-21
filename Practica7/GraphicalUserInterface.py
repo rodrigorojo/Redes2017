@@ -43,7 +43,7 @@ def main(argv):
         login = Login()
         if login.exec_() == QtGui.QDialog.Accepted:
             lst = login.regresa_str()
-            chat = Chat(my_port = lst[1],contact_port = lst[0])
+            chat = Chat(my_port = lst[0],contact_port = lst[1])
             chat.show()
         sys.exit(app.exec_())
     else:

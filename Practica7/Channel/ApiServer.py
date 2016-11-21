@@ -16,6 +16,8 @@ import cStringIO
 from threading import Thread
 from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
+import socket
+
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
@@ -26,34 +28,58 @@ class MyApiServer(QtGui.QDialog):
     **************************************************"""
     def __init__(self, ip = None, my_port = None):
         super(MyApiServer, self).__init__(None)
-        self.conversacion = QTextEdit(self)
-        self.my_port = my_port
         self.frames = []
         self.leEstanVideollamando = True
+        self.TCP_IP = ip
+        self.TCP_PORT = int(my_port)
+        self.BUFFER_SIZE = 20  # Normally 1024, but we want fast response
+        print "Nuevo servidor en: ",self.TCP_PORT
+        self.conversacion = QTextEdit(self)
         if(ip == None):
-            self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
+            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.s.bind((Constants().LOCALHOST, self.TCP_PORT))
+            self.s.listen(5)
         else:
-            self.server = SimpleXMLRPCServer((ip, int(my_port)), allow_none = True)
-            print "servidor en ip: " +ip+" : "+ str(int(my_port))
-        self.server.register_introspection_functions()
-        self.server.register_multicall_functions()
-        self.functionWrapper = FunctionWrapper()
-        self.server.register_instance(self.functionWrapper)
-        self.server.register_function(self.recibe_mensaje, Constants().RECIBE_MENSAJE_FUNC)
-        self.server.register_function(self.recibe_audio, "recibe_audio")
-        self.server.register_function(self.recibe_video, "recibe_video")
+            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.s.bind((self.TCP_IP, self.TCP_PORT))
+            self.s.listen(5)
+        self.esTexto = True
+        self.p = pyaudio.PyAudio()
+        self.stream = self.p.open(format=self.p.get_format_from_width(2),
+                            channels=1,
+                            rate=44100,
+                            output=True,
+                            frames_per_buffer=1024)
 
-    """**************************************************
-    Funcion para empezar el servidor
-    **************************************************"""
-    def init_server(self):
-        self.server.serve_forever()
+
+    def run_servidor(self):
+        print "El servidor esta corriendo"
+        self.p = pyaudio.PyAudio()
+        self.stream = self.p.open(format=self.p.get_format_from_width(2),
+                            channels=1,
+                            rate=44100,
+                            output=True,
+                            frames_per_buffer=1024)
+        print "entro1"
+        while 1:
+            conn, addr = self.s.accept()
+            print 'Connection address:', addr
+            data = conn.recv(self.BUFFER_SIZE)
+            if self.esTexto:
+                self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
+            else:
+                print "entro2"
+                self.stream.write(data)
+                print "entro3"
+        print "entro"
+        self.s.close()
+
+
     """**************************************************
     Funcion que recibe un mensaje y lo agrega a la lista de mensajes
     @param <str> msg: mensaje que recibe
     **************************************************"""
     def recibe_mensaje(self, mensaje):
-        #print "recibe____mensaje: Contacto:::" + mensaje
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
 
     """**************************************************

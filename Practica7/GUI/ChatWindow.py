@@ -19,6 +19,8 @@ La instancia de esta clase crea una ventana de chat con un canal
 class Chat(QtGui.QDialog):
     def __init__(self, parent=None, my_port = None,contact_port = None, ip = None):
         super(Chat, self).__init__(parent)
+        self.puerto_contacto = contact_port
+        self.ip = ip
         if ip == None:
             self.mc = Channel(my_port = int(my_port),contact_port = int(contact_port))
         else:
@@ -58,7 +60,12 @@ class Chat(QtGui.QDialog):
     Funcion que crea una nueva ventana de llamar
     **************************************************"""
     def llamar(self):
-        self.ventanaLlamada = CallWindow(self.mc)
+        self.mc.server.esTexto = False
+        print "esTexto <- ", self.mc.server.esTexto
+        if self.ip == None:
+            self.ventanaLlamada = CallWindow(Constants().LOCALHOST,contact_port = self.puerto_contacto)
+        else:
+            self.ventanaLlamada = CallWindow(ip = self.ip, contact_port = self.puerto_contacto)
         self.ventanaLlamada.show()
 
     """**************************************************
@@ -72,7 +79,13 @@ class Chat(QtGui.QDialog):
     Funcion que usa el boton buttonres para enviar el mensaje
     **************************************************"""
     def responder(self):
+        self.mc.server.esTexto = True
         print "oprimio boton responder con texto: " + str(self.restext.text())
         self.Conv.insertPlainText("YO: " + str(self.restext.text()) +"\n")
-        self.mc.client.client_send_message(self.restext.text())
+        if self.ip == None:
+            self.client = MyApiClient(Constants().LOCALHOST, contact_port = self.puerto_contacto)
+        else:
+            self.client = MyApiClient(self.ip, contact_port = self.puerto_contacto)
+        self.client.client_send_message(self.restext.text())
+        #self.mc.client.client_send_message(self.restext.text())
         self.restext.setText(Constants().EMPTY_STR)

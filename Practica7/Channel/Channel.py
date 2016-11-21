@@ -30,19 +30,18 @@ class Channel:
                 representa el puerto de la instancia del contacto
     **************************************************"""
     def __init__(self, contact_ip = None, my_port = None,contact_port = None):
-        self.contact_ip = contact_ip
+        #self.contact_ip = contact_ip
         self.my_port = my_port
         self.contact_port = contact_port
+        print 'contact_port: ',self.contact_port,' my_port: ', self.my_port
 
         if( contact_ip == None):
             self.server = MyApiServer(my_port = self.my_port)
-            api_server_thread = Thread(target = self.server.init_server)
+            api_server_thread = Thread(target = self.server.run_servidor)
             api_server_thread.daemon=True
             api_server_thread.start()
-            self.client = MyApiClient(Constants().LOCALHOST, contact_port = self.contact_port)
         else:
             self.server = MyApiServer(ip = get_ip_address(), my_port= 5000)
-            api_server_thread = Thread(target = self.server.init_server)
-            api_server_thread.daemon = True
+            api_server_thread = Thread(target = self.server.run_servidor)
+            api_server_thread.daemon=True
             api_server_thread.start()
-            self.client = MyApiClient(self.contact_ip, 5000)
