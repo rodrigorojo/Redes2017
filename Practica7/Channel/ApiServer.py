@@ -17,6 +17,7 @@ from threading import Thread
 from PyQt4.QtCore import QPoint, QTimer
 from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
 import socket
+import wave
 
 """**************************************************
 Clase para crear un servidor xmlrpc
@@ -30,50 +31,41 @@ class MyApiServer(QtGui.QDialog):
         super(MyApiServer, self).__init__(None)
         self.frames = []
         self.leEstanVideollamando = True
-        self.TCP_IP = ip
+        if ip == None:
+            self.TCP_IP = "localhost"
+        else:
+            self.TCP_IP = str(ip)
         self.TCP_PORT = int(my_port)
         self.BUFFER_SIZE = 20  # Normally 1024, but we want fast response
         print "Nuevo servidor en: ",self.TCP_PORT
         self.conversacion = QTextEdit(self)
-        if(ip == None):
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.bind((Constants().LOCALHOST, self.TCP_PORT))
-            self.s.listen(5)
-        else:
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.bind((self.TCP_IP, self.TCP_PORT))
-            self.s.listen(5)
-        self.esTexto = True
-        self.p = pyaudio.PyAudio()
-        self.stream = self.p.open(format=self.p.get_format_from_width(2),
-                            channels=1,
-                            rate=44100,
-                            output=True,
-                            frames_per_buffer=1024)
 
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        DELAY_SECONDS = 5
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.bind((self.TCP_IP, self.TCP_PORT))
+        self.s.listen(1)
+
+        self.frames = []
+        self.p = pyaudio.PyAudio()
+        FORMAT = self.p.get_format_from_width(2)
+        self.stream = self.p.open(format=FORMAT,
+                            channels=CHANNELS,
+                            rate=RATE,
+                            output=True,
+                            frames_per_buffer=CHUNK)
 
     def run_servidor(self):
-        print "El servidor esta corriendo"
-        self.p = pyaudio.PyAudio()
-        self.stream = self.p.open(format=self.p.get_format_from_width(2),
-                            channels=1,
-                            rate=44100,
-                            output=True,
-                            frames_per_buffer=1024)
         print "entro1"
         while 1:
             conn, addr = self.s.accept()
             print 'Connection address:', addr
             data = conn.recv(self.BUFFER_SIZE)
-            if self.esTexto:
-                self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
-            else:
-                print "entro2"
-                self.stream.write(data)
-                print "entro3"
+            self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
         print "entro"
         self.s.close()
-
 
     """**************************************************
     Funcion que recibe un mensaje y lo agrega a la lista de mensajes

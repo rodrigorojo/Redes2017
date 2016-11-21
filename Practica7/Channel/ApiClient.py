@@ -11,6 +11,7 @@ import cv2
 import time
 from cStringIO import StringIO
 import socket
+import wave
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -26,54 +27,56 @@ class MyApiClient():
         self.TCP_IP = host
         self.TCP_PORT = int(contact_port)
         self.BUFFER_SIZE = 1024
-        #self.contact_port = contact_port
-        #self.host = host
         self.estaLlamando = False
         self.estaVideollamando = False
-        #if contact_port and host:
-        #    self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #    self.s.connect((self.TCP_IP, self.TCP_PORT))
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((self.TCP_IP, self.TCP_PORT))
 
-
-
-
-            #s.close()
     """**************************************************
     Funcion para enviar mensajes
     @param <str> message: El mensaje que enviara
     **************************************************"""
     def client_send_message(self, mensaje):
         print "El mensaje que se enviara es: " + str(mensaje)
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.connect((self.TCP_IP, self.TCP_PORT))
         self.s.send(str(mensaje))
 
-    def client_send_audio(self):
-        self.thread = Thread(target=self.client_record_audio())
-        self.thread.daemon = True
-        self.thread.start()
+    def audio_thread(self):
+        self.thread1 = Thread(target=self.client_send_audio())
+        self.thread1.daemon = True
+        self.thread1.start()
 
-    def client_record_audio(self):
-        self.p = pyaudio.PyAudio()
-        FORMAT = self.p.get_format_from_width(2)
+    def client_send_audio(self):
         CHUNK = 1024
+        FORMAT = pyaudio.paInt16
         CHANNELS = 1
         RATE = 44100
-        RECORD_SECONDS = 2
-        self.stream = self.p.open(format=FORMAT,
+        RECORD_SECONDS = 100
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.connect((self.TCP_IP, self.TCP_PORT))
+        p = pyaudio.PyAudio()
+        self.stream = p.open(format=FORMAT,
                             channels=CHANNELS,
                             rate=RATE,
                             input=True,
                             frames_per_buffer=CHUNK)
-        while True:
-            frame = []
-            for i in range(0,int(44100/1024 *2)):
-                print frame
-                frame.append(self.stream.read(1024))
-                #print frame
-            data_ar = numpy.fromstring(''.join(frame),  dtype=numpy.uint8)
-            self.s.sendall(data_ar)
+        print("*recording")
 
+        self.thread2 = Thread(target=self.aux())
+        self.thread2.daemon = True
+        self.thread2.start()
+
+    def aux(self):
+        CHUNK = 1024
+        RATE = 44100
+        RECORD_SECONDS = 100
+        frames = []
+        for i in range(0, int(RATE/CHUNK*RECORD_SECONDS)):
+            self.data  = self.stream.read(CHUNK)
+            frames.append(self.data)
+            self.s.sendall(self.data)
+
+    def client_record_audio(self):
+        pass
 
     """**************************************************
     Funcion que hace que la videollamada termine
