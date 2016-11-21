@@ -60,15 +60,6 @@ class MyApiClient():
                             input=True,
                             frames_per_buffer=CHUNK)
         print("*recording")
-
-        self.thread2 = Thread(target=self.aux())
-        self.thread2.daemon = True
-        self.thread2.start()
-
-    def aux(self):
-        CHUNK = 1024
-        RATE = 44100
-        RECORD_SECONDS = 100
         frames = []
         for i in range(0, int(RATE/CHUNK*RECORD_SECONDS)):
             self.data  = self.stream.read(CHUNK)
