@@ -27,7 +27,7 @@ class CallWindow(QtGui.QDialog):
 
     def llamar(self):
         print "Empezar el hilo y grabar"
-        self.client.client_send_audio()
+        self.client.audio()
 
     def colgar(self):
         self.mc.client.stop_llamada();

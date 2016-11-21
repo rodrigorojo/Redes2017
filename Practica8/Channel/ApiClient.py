@@ -12,6 +12,8 @@ import time
 from cStringIO import StringIO
 import socket
 import wave
+import numpy as np
+import time
 """**************************************************
 Fucnion para crear un cliente
 **************************************************"""
@@ -26,9 +28,11 @@ class MyApiClient():
     def __init__(self, host = None, contact_port = None):
         self.TCP_IP = host
         self.TCP_PORT = int(contact_port)
-        self.BUFFER_SIZE = 1024
+        self.BUFFER_SIZE = 20
         self.estaLlamando = False
         self.estaVideollamando = False
+        """ Constantes de tpc """
+        self.my_socket = ''
 
     """**************************************************
     Funcion para enviar mensajes
@@ -40,8 +44,39 @@ class MyApiClient():
         self.s.connect((self.TCP_IP, self.TCP_PORT))
         self.s.send(str(mensaje))
 
+
+
+
+    def callback_function(self,in_data, frame_count, time_info, flag):
+        global my_socket
+        audio_data = np.fromstring(in_data, dtype=np.float32)
+        self.my_socket.sendall(audio_data)
+        return (audio_data, pyaudio.paContinue)
+
+
+    def audio(self):
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        global my_socket
+        self.my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.my_socket.connect(("localhost", self.TCP_PORT))
+        pyaudio_instance = pyaudio.PyAudio()
+        FORMAT = pyaudio_instance.get_format_from_width(2)
+        stream = pyaudio_instance.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        input=True,
+                        frames_per_buffer=CHUNK,
+                        stream_callback = self.callback_function)
+        stream.start_stream()
+        while True:
+            time.sleep(0.1)
+
+        self.my_socket.close()
+
     def audio_thread(self):
-        self.thread1 = Thread(target=self.client_send_audio())
+        self.thread1 = Thread(target=self.audio())
         self.thread1.daemon = True
         self.thread1.start()
 

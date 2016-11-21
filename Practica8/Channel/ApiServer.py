@@ -40,42 +40,31 @@ class MyApiServer(QtGui.QDialog):
         CHANNELS = 1
         RATE = 44100
         DELAY_SECONDS = 5
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.bind(("localhost", self.TCP_PORT))
-        self.s.listen(1)
+        print "AQUI11"
+        global my_socket
 
-        self.frames = []
-
-        self.p = pyaudio.PyAudio()
-        FORMAT = self.p.get_format_from_width(2)
-        self.stream = self.p.open(format=FORMAT,
-                            channels=CHANNELS,
-                            rate=RATE,
-                            output=True,
-                            frames_per_buffer=CHUNK)
 
     def run_servidor(self):
-        print self.esTexto
-        if self.esTexto:
-            while 1:
-                conn, addr = self.s.accept()
-                #print 'Connection address:', addr
-                data = conn.recv(self.BUFFER_SIZE)
-                print "------------>",data
-                self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
-                self.esTexto = False
-        else:
-            self.conn, self.addr = self.s.accept()
-            self.data = self.conn.recv(1024)
-            while self.data != '':
-                self.stream.write(self.data)
-                self.data = self.conn.recv(1024)
-                self.frames.append(self.data)
-                print "------------>",type(self.data)
-            self.stream.stop_stream()
-            self.stream.close()
-            self.p.terminate()
-            self.conn.close()
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        self.my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.my_socket.bind(('localhost', self.TCP_PORT))
+        self.my_socket.listen(1)
+        self.conn, self.addr = self.my_socket.accept()
+        print "AQUI12"
+        self.pyaudio_instance = pyaudio.PyAudio()
+        self.FORMAT = self.pyaudio_instance.get_format_from_width(2)
+        self.stream = self.pyaudio_instance.open(format=self.FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE,
+                        output=True,
+                        frames_per_buffer=CHUNK)
+        while True:
+            data = self.conn.recv(20)
+            if not data: break
+            self.stream.write(data)
+        self.conn.close()
 
 
     """**************************************************
