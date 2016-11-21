@@ -66,9 +66,6 @@ class MyApiClient():
             frames.append(self.data)
             self.s.sendall(self.data)
 
-    def client_record_audio(self):
-        pass
-
     """**************************************************
     Funcion que hace que la videollamada termine
     **************************************************"""

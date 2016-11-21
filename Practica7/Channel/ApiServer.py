@@ -30,33 +30,16 @@ class MyApiServer(QtGui.QDialog):
     def __init__(self, ip = None, my_port = None):
         super(MyApiServer, self).__init__(None)
         self.frames = []
-        self.leEstanVideollamando = True
+        self.esTexto = True
         self.TCP_IP = ip
         self.TCP_PORT = int(my_port)
         self.BUFFER_SIZE = 20  # Normally 1024, but we want fast response
         print "Nuevo servidor en: ",self.TCP_PORT
         self.conversacion = QTextEdit(self)
-        """if(ip == None):
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.bind((Constants().LOCALHOST, self.TCP_PORT))
-            self.s.listen(1)
-        else:
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.s.bind((self.TCP_IP, self.TCP_PORT))
-            self.s.listen(5)
-        self.esTexto = True
-        self.p = pyaudio.PyAudio()
-        self.stream = self.p.open(format=self.p.get_format_from_width(2),
-                            channels=1,
-                            rate=44100,
-                            output=True,
-                            frames_per_buffer=1024)
-        """
         CHUNK = 1024
         CHANNELS = 1
         RATE = 44100
         DELAY_SECONDS = 5
-        print "servidor4"
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.s.bind(("localhost", self.TCP_PORT))
         self.s.listen(1)
@@ -72,28 +55,27 @@ class MyApiServer(QtGui.QDialog):
                             frames_per_buffer=CHUNK)
 
     def run_servidor(self):
-        self.conn, self.addr = self.s.accept()
-        self.data = self.conn.recv(1024)
-        while self.data != '':
-            print 'Connection address:', self.addr
-            self.stream.write(self.data)
+        print self.esTexto
+        if self.esTexto:
+            while 1:
+                conn, addr = self.s.accept()
+                #print 'Connection address:', addr
+                data = conn.recv(self.BUFFER_SIZE)
+                print "------------>",data
+                self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
+                self.esTexto = False
+        else:
+            self.conn, self.addr = self.s.accept()
             self.data = self.conn.recv(1024)
-            self.frames.append(self.data)
-        self.stream.stop_stream()
-        self.stream.close()
-        self.p.terminate()
-        self.conn.close()
-
-    def prueba(self,data):
-        while True:
-            #if self.esTexto:
-            #    self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
-            #else:
-            print "entro2"
-            if not data: break
-            self.stream.write(data)
-            print "entro3"
-
+            while self.data != '':
+                self.stream.write(self.data)
+                self.data = self.conn.recv(1024)
+                self.frames.append(self.data)
+                print "------------>",type(self.data)
+            self.stream.stop_stream()
+            self.stream.close()
+            self.p.terminate()
+            self.conn.close()
 
 
     """**************************************************
