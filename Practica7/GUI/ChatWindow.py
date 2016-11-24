@@ -8,9 +8,10 @@ from LoginWindow import *
 import multiprocessing as mp
 
 ######para la llamada
-#from CallWindow import *
+from CallWindow import *
 from Channel.RecordAudio import *
 ######
+from VideocallWindow import *
 
 """**************************************************
 La instancia de esta clase crea una ventana de chat con un canal
@@ -18,6 +19,8 @@ La instancia de esta clase crea una ventana de chat con un canal
 class Chat(QtGui.QDialog):
     def __init__(self, parent=None, my_port = None,contact_port = None, ip = None):
         super(Chat, self).__init__(parent)
+        self.puerto_contacto = contact_port
+        self.ip = ip
         if ip == None:
             self.mc = Channel(my_port = int(my_port),contact_port = int(contact_port))
         else:
@@ -33,8 +36,11 @@ class Chat(QtGui.QDialog):
         self.buttonres = QPushButton(Constants().RES, self)
         self.buttonres.clicked.connect(self.responder)
 
-        self.buttonCall = QPushButton("Llamar", self)
+        self.buttonCall = QPushButton("Llamada de Audio", self)
         self.buttonCall.clicked.connect(self.llamar)
+
+        self.buttonVideocall = QPushButton("Videollamada", self)
+        self.buttonVideocall.clicked.connect(self.videollamar)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.Con)
@@ -42,7 +48,10 @@ class Chat(QtGui.QDialog):
         layout2 = QHBoxLayout(self)
         layout2.addWidget(self.restext)
         layout2.addWidget(self.buttonres)
-        layout2.addWidget(self.buttonCall)
+        layout3 = QHBoxLayout(self)
+        layout3.addWidget(self.buttonCall)
+        layout3.addWidget(self.buttonVideocall)
+        layout.addLayout(layout3)
         layout.addLayout(layout2)
 
         self.setWindowTitle(Constants().CHAT)
@@ -51,41 +60,32 @@ class Chat(QtGui.QDialog):
     Funcion que crea una nueva ventana de llamar
     **************************************************"""
     def llamar(self):
-        self.ventanaLlamada = CallWindow(self.mc)
+        self.mc.server.esTexto = False
+        print "esTexto <- ", self.mc.server.esTexto
+        if self.ip == None:
+            self.ventanaLlamada = CallWindow(Constants().LOCALHOST,contact_port = self.puerto_contacto)
+        else:
+            self.ventanaLlamada = CallWindow(ip = self.ip, contact_port = self.puerto_contacto)
         self.ventanaLlamada.show()
+
+    """**************************************************
+    Funcion que crea una nueva ventana de videollamar
+    **************************************************"""
+    def videollamar(self):
+        self.ventanaVideollamada = VideocallWindow(self.mc)
+        self.ventanaVideollamada.show()
 
     """**************************************************
     Funcion que usa el boton buttonres para enviar el mensaje
     **************************************************"""
     def responder(self):
+        self.mc.server.esTexto = True
         print "oprimio boton responder con texto: " + str(self.restext.text())
         self.Conv.insertPlainText("YO: " + str(self.restext.text()) +"\n")
-        self.mc.client.client_send_message(self.restext.text())
+        if self.ip == None:
+            self.client = MyApiClient(Constants().LOCALHOST, contact_port = self.puerto_contacto)
+        else:
+            self.client = MyApiClient(self.ip, contact_port = self.puerto_contacto)
+        self.client.client_send_message(self.restext.text())
+        #self.mc.client.client_send_message(self.restext.text())
         self.restext.setText(Constants().EMPTY_STR)
-
-class CallWindow(QtGui.QDialog):
-    def __init__(self, canal):
-        super(CallWindow, self).__init__()
-        self.mc = canal
-        self.buttonStart = QPushButton("Empezar llamada", self)
-        self.buttonStart.clicked.connect(self.llamar)
-
-        self.buttonStop = QPushButton("Terminar Llamada", self)
-        self.buttonStop.clicked.connect(self.colgar)
-
-        layout = QVBoxLayout(self)
-        layout2 = QHBoxLayout(self)
-        layout2.addWidget(self.buttonStart)
-        layout2.addWidget(self.buttonStop)
-        layout.addLayout(layout2)
-
-        self.setWindowTitle("Llamada")
-        
-    def llamar(self):
-        print "Empezar el hilo y grabar o algo asi"
-        self.mc.client.estaLlamando = True;
-        self.mc.client.llamada_en_thread()
-
-    def colgar(self):
-        self.mc.client.stop_llamada();
-        print "oprimio boton Terminar Llamada"

@@ -7,7 +7,18 @@ import xmlrpclib
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import sys
 from Constants.Constants import *
+import GUI.VideocallCameraWindow as vccw
 import pyaudio
+import cv2
+import cv
+import numpy
+import cStringIO
+from threading import Thread
+from PyQt4.QtCore import QPoint, QTimer
+from PyQt4.QtGui import QApplication, QImage, QPainter, QWidget
+import socket
+import wave
+
 """**************************************************
 Clase para crear un servidor xmlrpc
 **************************************************"""
@@ -18,32 +29,96 @@ class MyApiServer(QtGui.QDialog):
     **************************************************"""
     def __init__(self, ip = None, my_port = None):
         super(MyApiServer, self).__init__(None)
+        self.frames = []
+        self.esTexto = True
+        self.TCP_IP = ip
+        self.TCP_PORT = int(my_port)
+        self.BUFFER_SIZE = 20  # Normally 1024, but we want fast response
+        print "Nuevo servidor en: ",self.TCP_PORT
         self.conversacion = QTextEdit(self)
-        self.my_port = my_port
-        if(ip == None):
-            self.server = SimpleXMLRPCServer((Constants().LOCALHOST, int(my_port)), allow_none = True)
+        CHUNK = 1024
+        CHANNELS = 1
+        RATE = 44100
+        DELAY_SECONDS = 5
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.bind(("localhost", self.TCP_PORT))
+        self.s.listen(1)
+
+        self.frames = []
+
+        self.p = pyaudio.PyAudio()
+        FORMAT = self.p.get_format_from_width(2)
+        self.stream = self.p.open(format=FORMAT,
+                            channels=CHANNELS,
+                            rate=RATE,
+                            output=True,
+                            frames_per_buffer=CHUNK)
+
+    def run_servidor(self):
+        print self.esTexto
+        if self.esTexto:
+            while 1:
+                conn, addr = self.s.accept()
+                #print 'Connection address:', addr
+                data = conn.recv(self.BUFFER_SIZE)
+                print "------------>",data
+                self.conversacion.insertPlainText("CONTACTO: " + str(data) +"\n")
+                self.esTexto = False
         else:
-            self.server = SimpleXMLRPCServer((ip, int(my_port)), allow_none = True)
-            print "servidor en ip: " +ip+" : "+ str(int(my_port))
-        self.server.register_introspection_functions()
-        self.server.register_multicall_functions()
-        self.functionWrapper = FunctionWrapper()
-        self.server.register_instance(self.functionWrapper)
-        self.server.register_function(self.recibe_mensaje, Constants().RECIBE_MENSAJE_FUNC)
-        self.server.register_function(self.recibe_audio, "recibe_audio")
+            self.conn, self.addr = self.s.accept()
+            self.data = self.conn.recv(1024)
+            while self.data != '':
+                self.stream.write(self.data)
+                self.data = self.conn.recv(1024)
+                self.frames.append(self.data)
+                print "------------>",type(self.data)
+            self.stream.stop_stream()
+            self.stream.close()
+            self.p.terminate()
+            self.conn.close()
+
 
     """**************************************************
-    Funcion para empezar el servidor
-    **************************************************"""
-    def init_server(self):
-        self.server.serve_forever()
-    """**************************************************
     Funcion que recibe un mensaje y lo agrega a la lista de mensajes
-    @param <str> msg: mensaje que recive
+    @param <str> msg: mensaje que recibe
     **************************************************"""
     def recibe_mensaje(self, mensaje):
-        #print "recibe____mensaje: Contacto:::" + mensaje
         self.conversacion.insertPlainText("CONTACTO: " + str(mensaje) +"\n")
+
+    """**************************************************
+    Funcion que recibe el video y se lo pasa a otra
+    **************************************************"""
+    def recibe_video(self,data):
+        print "El video se recibio en servidor "
+        self.thread = Thread(target=self.reproduce_video,args=(data,))
+        self.thread.daemon = True
+        self.thread.start()
+    """**************************************************
+    Funcion que reproduce el video
+    **************************************************"""
+    def reproduce_video(self,data):
+        self.append_frames(data)
+        #print self.leEstanVideollamando
+        while self.leEstanVideollamando:
+            print self.leEstanVideollamando
+            if len(self.frames) > 0:
+                print "|"
+                cv2.imshow(Constants().SERVIDOR,self.frames.pop(0))
+        print self.leEstanVideollamando
+        cv2.destroyAllWindows()
+    """**************************************************
+    Funcion auxiliar
+    **************************************************"""
+    def toArray(self,s):
+        self.f = cStringIO.StringIO(s)
+        self.arr = numpy.lib.format.read_array(self.f)
+        return self.arr
+    """**************************************************
+    Funcion que auxiliar
+    **************************************************"""
+    def append_frames(self,video):
+        self.frames.append(self.toArray(video.data))
+
     """**************************************************
     Funcion que recibe el audio y se lo pasa a otra
     **************************************************"""
@@ -51,7 +126,7 @@ class MyApiServer(QtGui.QDialog):
         print "El audio se recibio en servidor "
         self.reproduce(audio)
     """**************************************************
-    Funcion que recibe reproduce el audio recibido
+    Funcion que reproduce el audio recibido
     **************************************************"""
     def reproduce(self, audio):
         print "reproduciendo..."
